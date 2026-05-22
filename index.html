@@ -16,8 +16,6 @@
   body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
   .screen{display:none;min-height:100dvh;flex-direction:column}
   .screen.active{display:flex}
-
-  /* LOGIN */
   #screen-login{align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 0%,#1a2332 0%,#0d1117 60%);padding:24px}
   .login-card{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px 32px}
   .logo{text-align:center;margin-bottom:32px}
@@ -36,28 +34,21 @@
   .btn-danger{background:rgba(248,81,73,.15);border:1px solid rgba(248,81,73,.3);color:var(--red)}
   .btn-sm{padding:8px 14px;font-size:13px;width:auto}
   .error-msg{color:var(--red);font-size:13px;margin-top:8px;text-align:center}
-
-  /* TOPBAR */
   .topbar{position:sticky;top:0;z-index:100;background:rgba(13,17,23,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:12px}
   .topbar-title{flex:1;font-size:16px;font-weight:700}
   .topbar-sub{font-size:11px;color:var(--text2);font-weight:400;display:block}
   .badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;background:rgba(240,165,0,.15);color:var(--accent);border:1px solid rgba(240,165,0,.3)}
   .badge-red{background:rgba(248,81,73,.15);color:var(--red);border-color:rgba(248,81,73,.3)}
   .icon-btn{background:none;border:none;color:var(--text2);cursor:pointer;padding:6px;border-radius:8px;font-size:18px;transition:color .2s}
-  .icon-btn:hover{color:var(--text)}
-
-  /* LOCATION */
   #screen-location{padding:24px 16px}
   .location-header{text-align:center;padding:40px 0 32px}
   .location-header h2{font-size:26px;font-weight:700}
   .loc-cards{display:flex;flex-direction:column;gap:12px}
   .loc-card{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:16px}
-  .loc-card:hover,.loc-card.selected{border-color:var(--accent);background:rgba(240,165,0,.05)}
+  .loc-card:hover{border-color:var(--accent);background:rgba(240,165,0,.05)}
   .loc-icon{font-size:28px}
   .loc-name{font-size:17px;font-weight:600}
   .loc-desc{color:var(--text2);font-size:13px;margin-top:2px}
-
-  /* SCAN */
   #screen-scan{background:#000}
   #qr-reader video{width:100%!important}
   .scan-overlay{position:fixed;inset:0;pointer-events:none;z-index:10;display:flex;align-items:center;justify-content:center}
@@ -68,8 +59,6 @@
   .scan-hint{text-align:center;color:rgba(255,255,255,.6);font-size:13px;margin-bottom:12px}
   .manual-input-row{display:flex;gap:8px}
   .manual-input-row input{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
-
-  /* FORM */
   #screen-form{overflow-y:auto}
   .form-body{padding:16px;flex:1}
   .asset-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
@@ -84,11 +73,9 @@
   .qty-btn:active{background:var(--border)}
   .qty-input{flex:1;text-align:center;font-size:24px;font-weight:700;font-family:'IBM Plex Mono',monospace;background:none;border:none;border-radius:0;padding:0;height:52px}
   .section-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;margin-top:20px}
-  .photo-area{border:2px dashed var(--border);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;transition:border-color .2s;position:relative;overflow:hidden}
+  .photo-area{border:2px dashed var(--border);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;transition:border-color .2s}
   .photo-area:hover{border-color:var(--accent)}
   .form-footer{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--border);padding:16px;display:flex;gap:10px}
-
-  /* HISTORY */
   #screen-history{overflow-y:auto}
   .history-body{padding:16px;padding-bottom:80px}
   .tx-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
@@ -97,8 +84,6 @@
   .tx-qty{font-size:18px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--green)}
   .tx-name{font-size:14px;color:var(--text);margin-bottom:4px}
   .tx-meta{font-size:12px;color:var(--text2)}
-
-  /* SETTINGS */
   #screen-settings{overflow-y:auto}
   .settings-body{padding:16px;padding-bottom:80px}
   .settings-section{margin-bottom:24px}
@@ -113,37 +98,24 @@
   .avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000;flex-shrink:0}
   .user-name{font-size:14px;font-weight:600}
   .user-role{font-size:12px;color:var(--text2)}
-
-  /* DEBUG BOX */
-  .debug-box{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:11px;font-family:'IBM Plex Mono',monospace;max-height:180px;overflow-y:auto;margin-top:8px;color:#8b949e}
-  .debug-box .ok{color:#3fb950}
-  .debug-box .err{color:#f85149}
-  .debug-box .warn{color:#f0a500}
-
-  /* MODAL */
+  .debug-box{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:11px;font-family:'IBM Plex Mono',monospace;max-height:200px;overflow-y:auto;margin-top:8px;color:#8b949e}
+  .debug-box .ok{color:#3fb950}.debug-box .err{color:#f85149}.debug-box .warn{color:#f0a500}
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:flex-end;justify-content:center;padding:16px}
   .modal-overlay.open{display:flex}
   .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:480px;max-height:80dvh;overflow-y:auto}
   .modal-title{font-size:17px;font-weight:700;margin-bottom:16px}
-
-  /* TOAST */
   .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:14px;font-weight:500;white-space:nowrap;z-index:300;opacity:0;transition:all .3s;pointer-events:none}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .toast.success{border-color:var(--green);color:var(--green)}
   .toast.error{border-color:var(--red);color:var(--red)}
   .toast.warn{border-color:var(--accent);color:var(--accent)}
-
-  /* LOADING */
   .loading-overlay{position:fixed;inset:0;background:rgba(13,17,23,.85);z-index:400;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px}
   .loading-overlay.show{display:flex}
   .spinner{width:32px;height:32px;border:3px solid rgba(240,165,0,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   .loading-text{color:var(--text2);font-size:13px}
-
-  .divider{height:1px;background:var(--border);margin:16px 0}
   .flex{display:flex}.gap-8{gap:8px}.mt-8{margin-top:8px}.mt-16{margin-top:16px}
   .text-center{text-align:center}.text-muted{color:var(--text2)}
-  .select-add-row{display:flex;gap:8px}.select-add-row select{flex:1}
   .config-note{font-size:11px;color:var(--accent);background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.2);border-radius:6px;padding:2px 8px;display:inline-block;margin-top:4px}
 </style>
 </head>
@@ -155,7 +127,7 @@
 </div>
 <div class="toast" id="toast"></div>
 
-<!-- ═══ LOGIN ═══ -->
+<!-- LOGIN -->
 <div class="screen active" id="screen-login">
   <div class="login-card">
     <div class="logo">
@@ -178,7 +150,7 @@
   </div>
 </div>
 
-<!-- ═══ LOCATION ═══ -->
+<!-- LOCATION -->
 <div class="screen" id="screen-location">
   <div class="topbar">
     <div class="logo-icon" style="width:32px;height:32px;font-size:14px;border-radius:8px;flex-shrink:0">📦</div>
@@ -194,12 +166,12 @@
   </div>
 </div>
 
-<!-- ═══ SCAN ═══ -->
+<!-- SCAN -->
 <div class="screen" id="screen-scan">
   <div class="topbar" style="position:fixed;top:0;left:0;right:0;z-index:30">
     <button class="icon-btn" onclick="goToLocation()">◀</button>
     <div class="topbar-title">สแกน QR Code<span class="topbar-sub" id="scan-location-label">-</span></div>
-    <button class="icon-btn" id="btn-history-from-scan" onclick="showHistory()">📋</button>
+    <button class="icon-btn" onclick="showHistory()">📋</button>
     <button class="icon-btn" id="btn-settings-fab" style="display:none" onclick="showSettings()">⚙️</button>
   </div>
   <div style="margin-top:56px;flex:1;position:relative;background:#000">
@@ -217,7 +189,7 @@
   </div>
 </div>
 
-<!-- ═══ FORM ═══ -->
+<!-- FORM -->
 <div class="screen" id="screen-form">
   <div class="topbar">
     <button class="icon-btn" onclick="goToScan()">◀</button>
@@ -231,26 +203,23 @@
   </div>
 </div>
 
-<!-- ═══ HISTORY ═══ -->
+<!-- HISTORY -->
 <div class="screen" id="screen-history">
   <div class="topbar">
     <button class="icon-btn" onclick="goToScan()">◀</button>
     <div class="topbar-title">ประวัติการนับ</div>
     <button class="icon-btn" onclick="exportCSV()">📤</button>
   </div>
-  <div class="history-body" id="history-body">
-    <div class="text-center text-muted" style="padding:60px 0">กำลังโหลด...</div>
-  </div>
+  <div class="history-body" id="history-body"></div>
 </div>
 
-<!-- ═══ SETTINGS ═══ -->
+<!-- SETTINGS -->
 <div class="screen" id="screen-settings">
   <div class="topbar">
     <button class="icon-btn" onclick="goToScan()">◀</button>
     <div class="topbar-title">ตั้งค่าระบบ <span class="badge badge-red">Admin</span></div>
   </div>
   <div class="settings-body">
-
     <div class="settings-section">
       <div class="section-title">🔧 GAS URL</div>
       <div class="settings-card">
@@ -260,7 +229,6 @@
         </div>
       </div>
     </div>
-
     <div class="settings-section">
       <div class="section-title">📊 ทดสอบ GAS</div>
       <div class="settings-card">
@@ -280,12 +248,10 @@
       </div>
       <div class="debug-box" id="debug-box"></div>
     </div>
-
     <div class="settings-section">
       <div class="section-title">📋 Locations ที่ใช้</div>
-      <div class="settings-card" id="locations-config">
+      <div class="settings-card">
         <div style="padding:12px 16px">
-          <div style="font-size:13px;color:var(--text2);margin-bottom:8px">จัดการ location ที่แสดงในหน้าเลือกคลัง</div>
           <div id="loc-list-settings"></div>
           <div class="flex gap-8 mt-8">
             <input type="text" id="new-loc-input" placeholder="ชื่อ location ใหม่..." style="flex:1">
@@ -294,7 +260,6 @@
         </div>
       </div>
     </div>
-
     <div class="settings-section">
       <div class="section-title">💬 Remarks</div>
       <div class="settings-card" id="remarks-list"></div>
@@ -303,7 +268,6 @@
         <button class="btn btn-ghost btn-sm" style="white-space:nowrap" onclick="addConfigItem('remarks')">+ เพิ่ม</button>
       </div>
     </div>
-
     <div class="settings-section">
       <div class="section-title">👤 ผู้ตรวจนับ</div>
       <div class="settings-card" id="inspectors-list"></div>
@@ -312,20 +276,18 @@
         <button class="btn btn-ghost btn-sm" style="white-space:nowrap" onclick="addConfigItem('inspectors')">+ เพิ่ม</button>
       </div>
     </div>
-
     <div class="settings-section">
       <div class="section-title">👥 ผู้ใช้งาน</div>
       <div class="settings-card" id="users-list"></div>
       <button class="btn btn-ghost mt-8" onclick="openModal('modal-add-user')">+ เพิ่มผู้ใช้ใหม่</button>
     </div>
-
     <div style="padding:16px 0">
       <button class="btn btn-danger" onclick="logout()">🚪 ออกจากระบบ</button>
     </div>
   </div>
 </div>
 
-<!-- ═══ MODALS ═══ -->
+<!-- MODALS -->
 <div class="modal-overlay" id="modal-add-user">
   <div class="modal">
     <div class="modal-title">➕ เพิ่มผู้ใช้ใหม่</div>
@@ -358,31 +320,24 @@
 
 <script>
 // ════════════════════════════════════════════════
-// CONFIG
+// CONFIG & STATE
 // ════════════════════════════════════════════════
 let GAS_URL = localStorage.getItem('km23_gas_url') || '';
 
-let state = {
-  user: null,
-  location: null,
-  scannedAsset: null,
-  photoDataUrl: null,
-};
+let state = { user: null, location: null, scannedAsset: null, photoDataUrl: null };
 
-// ── Safe localStorage loader ──────────────────────────────────
 function loadL(k, def) {
   try {
     const raw = localStorage.getItem(k);
-    if (raw === null || raw === undefined) return def;
+    if (raw === null) return def;
     const parsed = JSON.parse(raw);
-    // ถ้า def เป็น array ต้องได้ array กลับมา
     if (Array.isArray(def) && !Array.isArray(parsed)) return def;
+    if (typeof def === 'object' && !Array.isArray(def) && (typeof parsed !== 'object' || Array.isArray(parsed))) return def;
     return parsed;
   } catch(e) { return def; }
 }
 function saveL(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
 
-// ── Persistent local data ─────────────────────────────────────
 let ld = {
   users:      loadL('km23_users',      [{username:'admin',password:'admin1234',fullname:'ผู้ดูแลระบบ',role:'admin'},{username:'user1',password:'1234',fullname:'ผู้ตรวจนับ 1',role:'user'}]),
   assetCache: loadL('km23_assetCache', {}),
@@ -392,7 +347,6 @@ let ld = {
   locations:  loadL('km23_locations',  ['KM23-คลังB','KM23-คลังA_2026','KM23Office']),
 };
 
-// ── Guard: ensure arrays are always arrays ────────────────────
 function ensureArrays() {
   if (!Array.isArray(ld.records))    ld.records    = [];
   if (!Array.isArray(ld.remarks))    ld.remarks    = ['ชำรุด','สมบูรณ์','รอซ่อม','สูญหาย'];
@@ -403,40 +357,29 @@ function ensureArrays() {
 }
 ensureArrays();
 
-function saveLD() { Object.entries(ld).forEach(([k,v]) => saveL('km23_'+k, v)); }
-
 // ════════════════════════════════════════════════
-// GAS API — GET ONLY
+// GAS API
 // ════════════════════════════════════════════════
 async function gasGET(params) {
   if (!GAS_URL) return null;
   try {
     const url = new URL(GAS_URL);
-    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, String(v)));
+    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, String(v ?? '')));
     dbg('→ GET ' + params.action + (params.location ? ' loc='+params.location : ''));
     const res  = await fetch(url.toString(), { method:'GET', redirect:'follow' });
     const text = await res.text();
     try {
       const json = JSON.parse(text);
-      dbg('← ' + JSON.stringify(json).slice(0,120), json.ok ? 'ok' : 'err');
+      dbg('← ' + JSON.stringify(json).slice(0,150), json.ok ? 'ok' : 'err');
       return json;
-    } catch(e) {
-      dbg('← parse error: ' + text.slice(0,200), 'err');
-      return null;
-    }
-  } catch(e) {
-    dbg('← fetch error: ' + e.message, 'err');
-    return null;
-  }
+    } catch(e) { dbg('← parse err: '+text.slice(0,120),'err'); return null; }
+  } catch(e) { dbg('← fetch err: '+e.message,'err'); return null; }
 }
 
 // ════════════════════════════════════════════════
 // SCREENS
 // ════════════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-'+id).classList.add('active');
-}
+function showScreen(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('screen-'+id).classList.add('active'); }
 function showLoading(t='กำลังโหลด...') { document.getElementById('loading-text').textContent=t; document.getElementById('loading-overlay').classList.add('show'); }
 function hideLoading() { document.getElementById('loading-overlay').classList.remove('show'); }
 function toast(msg, type='', ms=2800) {
@@ -454,162 +397,117 @@ window.onload = () => {
 };
 
 async function doLogin() {
-  const u = document.getElementById('login-user').value.trim();
-  const p = document.getElementById('login-pass').value;
-  const errEl = document.getElementById('login-error');
-  errEl.textContent = '';
-  if (!u||!p) { errEl.textContent='กรุณากรอกชื่อผู้ใช้และรหัสผ่าน'; return; }
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value;
+  const errEl=document.getElementById('login-error');
+  errEl.textContent='';
+  if(!u||!p){errEl.textContent='กรุณากรอกชื่อผู้ใช้และรหัสผ่าน';return;}
   showLoading('กำลังตรวจสอบ...');
-
-  let userData = null;
-  if (GAS_URL) {
-    const res = await gasGET({ action:'login', username:u, password:p });
-    if (res && res.ok && res.user) userData = res.user;
-  }
-  if (!userData) {
-    ensureArrays();
-    userData = ld.users.find(x => x.username===u && x.password===p) || null;
-  }
-
+  let userData=null;
+  if(GAS_URL){const res=await gasGET({action:'login',username:u,password:p});if(res&&res.ok&&res.user)userData=res.user;}
+  if(!userData){ensureArrays();userData=ld.users.find(x=>x.username===u&&x.password===p)||null;}
   hideLoading();
-  if (!userData) { errEl.textContent='ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'; return; }
-
-  state.user = userData;
-  document.getElementById('topbar-username').textContent = userData.fullname || userData.username;
-  renderLocCards();
-  showScreen('location');
+  if(!userData){errEl.textContent='ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';return;}
+  state.user=userData;
+  document.getElementById('topbar-username').textContent=userData.fullname||userData.username;
+  renderLocCards(); showScreen('location');
 }
 
-function logout() { stopQR(); state.user=null; state.location=null; showScreen('login'); }
+function logout(){stopQR();state.user=null;state.location=null;showScreen('login');}
 
 // ════════════════════════════════════════════════
 // LOCATION
 // ════════════════════════════════════════════════
-const LOC_ICONS = { 'KM23-คลังB':'🏭', 'KM23-คลังA_2026':'🏗️', 'KM23Office':'🏢' };
+const LOC_ICONS={'KM23-คลังB':'🏭','KM23-คลังA_2026':'🏗️','KM23Office':'🏢'};
 
-function renderLocCards() {
+function renderLocCards(){
   ensureArrays();
-  const el = document.getElementById('loc-cards');
-  el.innerHTML = ld.locations.map(loc => `
+  document.getElementById('loc-cards').innerHTML=ld.locations.map(loc=>`
     <div class="loc-card" onclick="selectLocation('${loc}')">
       <div class="loc-icon">${LOC_ICONS[loc]||'📦'}</div>
       <div>
         <div class="loc-name">${loc}</div>
         <div class="loc-desc">${(ld.assetCache[loc]||[]).length} assets ใน cache</div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-async function selectLocation(loc) {
-  state.location = loc;
-  document.getElementById('scan-location-label').textContent = loc;
-  document.getElementById('form-location-label').textContent = loc;
-
-  if (state.user && state.user.role==='admin') {
-    document.getElementById('btn-settings-fab').style.display='flex';
-  }
-
-  showLoading('โหลดข้อมูล ' + loc + '...');
-
-  if (GAS_URL) {
-    const res = await gasGET({ action:'getAssets', location: loc });
-    if (res && res.ok && Array.isArray(res.assets) && res.assets.length > 0) {
-      ld.assetCache[loc] = res.assets;
-      saveL('km23_assetCache', ld.assetCache);
-      dbg('✅ โหลด assets ' + res.assets.length + ' รายการ colIndex=' + JSON.stringify(res.colIndex), 'ok');
-      toast('✅ โหลด ' + res.assets.length + ' รายการ', 'success');
+async function selectLocation(loc){
+  state.location=loc;
+  document.getElementById('scan-location-label').textContent=loc;
+  document.getElementById('form-location-label').textContent=loc;
+  if(state.user&&state.user.role==='admin') document.getElementById('btn-settings-fab').style.display='flex';
+  showLoading('โหลดข้อมูล '+loc+'...');
+  if(GAS_URL){
+    const res=await gasGET({action:'getAssets',location:loc});
+    if(res&&res.ok&&Array.isArray(res.assets)&&res.assets.length>0){
+      ld.assetCache[loc]=res.assets; saveL('km23_assetCache',ld.assetCache);
+      dbg('✅ โหลด '+res.assets.length+' assets','ok');
+      // แสดง allLocations ถ้ามี (debug)
+      if(res.allLocations) dbg('📋 locations ใน sheet: '+JSON.stringify(res.allLocations),'warn');
+      toast('✅ โหลด '+res.assets.length+' รายการ','success');
     } else {
-      const reason = res ? ('ok='+res.ok+' total='+res.total+' err='+(res.error||'-')) : 'no response';
-      dbg('⚠️ getAssets: ' + reason, 'warn');
-      const cached = (ld.assetCache[loc] || []);
-      if (cached.length > 0) {
-        toast('📦 ใช้ cache ' + cached.length + ' รายการ', 'warn');
-      } else {
-        toast('⚠️ ไม่พบ asset สำหรับ "' + loc + '" — ตรวจ GAS/Sheet', 'error', 5000);
-      }
+      const reason=res?('ok='+res.ok+' total='+res.total+' err='+(res.error||'-')):'no response';
+      dbg('⚠️ getAssets: '+reason,'warn');
+      // แสดง locations จริงจาก sheet
+      if(res&&res.allLocations) dbg('📋 locations ใน sheet: '+JSON.stringify(res.allLocations),'warn');
+      const cached=ld.assetCache[loc]||[];
+      toast(cached.length>0?'📦 ใช้ cache '+cached.length+' รายการ':'⚠️ ไม่พบ asset — ตรวจ GAS/Sheet',cached.length>0?'warn':'error',5000);
     }
-  } else {
-    dbg('ℹ️ ไม่มี GAS URL — ใช้ cache', 'warn');
-  }
-
-  hideLoading();
-  showScreen('scan');
-  startQR();
+  } else { dbg('ℹ️ ไม่มี GAS URL — ใช้ cache','warn'); }
+  hideLoading(); showScreen('scan'); startQR();
 }
 
-function goToLocation() { stopQR(); renderLocCards(); showScreen('location'); }
+function goToLocation(){stopQR();renderLocCards();showScreen('location');}
 
 // ════════════════════════════════════════════════
 // QR SCANNER
 // ════════════════════════════════════════════════
-let qrScanner=null, scanCD=false;
+let qrScanner=null,scanCD=false;
 
-function startQR() {
-  if (qrScanner) return;
-  try {
-    qrScanner = new Html5Qrcode('qr-reader');
-    qrScanner.start(
-      { facingMode:'environment' },
-      { fps:10, qrbox:{width:250,height:250} },
-      decoded => {
-        if (scanCD) return;
-        scanCD=true; setTimeout(()=>scanCD=false,2000);
-        handleScan(decoded.trim());
-      }, ()=>{}
-    ).catch(e => dbg('QR: '+e, 'err'));
-  } catch(e) { dbg('QR init: '+e,'err'); }
+function startQR(){
+  if(qrScanner)return;
+  try{
+    qrScanner=new Html5Qrcode('qr-reader');
+    qrScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:250}},
+      decoded=>{if(scanCD)return;scanCD=true;setTimeout(()=>scanCD=false,2000);handleScan(decoded.trim());},
+      ()=>{}).catch(e=>dbg('QR: '+e,'err'));
+  }catch(e){dbg('QR init: '+e,'err');}
 }
 
-function stopQR() {
-  if (!qrScanner) return;
+function stopQR(){
+  if(!qrScanner)return;
   qrScanner.stop().then(()=>{qrScanner.clear();qrScanner=null;}).catch(()=>{qrScanner=null;});
 }
 
-function manualSearch() {
-  const v = document.getElementById('manual-asset').value.trim();
-  if (v) handleScan(v);
-}
+function manualSearch(){const v=document.getElementById('manual-asset').value.trim();if(v)handleScan(v);}
 
-function handleScan(raw) {
+function handleScan(raw){
   stopQR();
-  const code   = raw.trim().toUpperCase();
-  const assets = ld.assetCache[state.location] || [];
-
-  dbg('🔍 scan: "' + code + '" loc="' + state.location + '" pool=' + assets.length);
-
-  let asset = assets.find(a => (a.assetNumber||'').trim().toUpperCase() === code);
-
-  if (!asset) {
-    let allAssets = [];
-    Object.values(ld.assetCache).forEach(arr => allAssets = allAssets.concat(arr));
-    const wrongLoc = allAssets.find(a => (a.assetNumber||'').trim().toUpperCase() === code);
-    if (wrongLoc) {
-      dbg('⚠️ พบแต่คนละคลัง: ' + wrongLoc.location, 'warn');
-      toast('⚠️ Asset นี้อยู่คลัง "' + wrongLoc.location + '" ไม่ใช่ "' + state.location + '"', 'error', 5000);
-    } else {
-      dbg('❌ ไม่พบเลย — ตัวอย่าง pool: ' + assets.slice(0,3).map(a=>'"'+a.assetNumber+'"').join(', '), 'err');
-      toast('❌ ไม่พบ "' + code + '" ใน ' + assets.length + ' assets', 'error', 4000);
-    }
-    asset = { assetNumber: raw.trim(), notFound: true };
+  const code=raw.trim().toUpperCase();
+  const assets=ld.assetCache[state.location]||[];
+  dbg('🔍 scan: "'+code+'" pool='+assets.length);
+  let asset=assets.find(a=>(a.assetNumber||'').trim().toUpperCase()===code);
+  if(!asset){
+    let all=[];Object.values(ld.assetCache).forEach(arr=>all=all.concat(arr));
+    const wl=all.find(a=>(a.assetNumber||'').trim().toUpperCase()===code);
+    if(wl){dbg('⚠️ พบคลังอื่น: '+wl.location,'warn');toast('⚠️ Asset อยู่คลัง "'+wl.location+'"','error',5000);}
+    else{dbg('❌ ไม่พบ "'+code+'"','err');toast('❌ ไม่พบ "'+code+'" ใน '+assets.length+' assets','error',4000);}
+    asset={assetNumber:raw.trim(),notFound:true};
   }
-
-  state.scannedAsset   = asset;
-  state.photoDataUrl   = null;
-  document.getElementById('form-asset-badge').textContent = asset.assetNumber;
-  buildForm(asset);
-  showScreen('form');
+  state.scannedAsset=asset; state.photoDataUrl=null;
+  document.getElementById('form-asset-badge').textContent=asset.assetNumber;
+  buildForm(asset); showScreen('form');
 }
 
 // ════════════════════════════════════════════════
 // FORM
 // ════════════════════════════════════════════════
-function buildForm(asset) {
+function buildForm(asset){
   ensureArrays();
-  const rmOpts  = ld.remarks.map(r=>`<option>${r}</option>`).join('');
-  const insOpts = ld.inspectors.map(i=>`<option>${i}</option>`).join('');
-
-  const assetSection = asset.notFound ? `
+  const rmOpts=ld.remarks.map(r=>`<option>${r}</option>`).join('');
+  const insOpts=ld.inspectors.map(i=>`<option>${i}</option>`).join('');
+  const assetSection=asset.notFound?`
     <div class="asset-card not-found">
       <div style="text-align:center;padding:16px">
         <div style="font-size:40px;margin-bottom:8px">⚠️</div>
@@ -617,8 +515,7 @@ function buildForm(asset) {
         <div style="color:var(--text2);font-size:13px">${asset.assetNumber}<br>ไม่พบในคลัง "${state.location}"</div>
         <button class="btn btn-ghost" style="margin-top:12px" onclick="openAddSkuModal('${asset.assetNumber}')">➕ เพิ่ม Asset ใหม่</button>
       </div>
-    </div>
-  ` : `
+    </div>`:`
     <div class="asset-card">
       <div style="margin-bottom:8px"><span class="asset-badge">${asset.assetNumber}</span></div>
       <div class="asset-name">${asset.name}</div>
@@ -626,10 +523,8 @@ function buildForm(asset) {
         <div><div class="meta-label">กลุ่ม</div><div class="meta-value">${asset.group||'-'}</div></div>
         <div><div class="meta-label">Location</div><div class="meta-value">${asset.location||'-'}</div></div>
       </div>
-    </div>
-  `;
-
-  document.getElementById('form-body').innerHTML = `
+    </div>`;
+  document.getElementById('form-body').innerHTML=`
     ${assetSection}
     <div class="section-title">จำนวน</div>
     <div class="qty-row">
@@ -648,223 +543,202 @@ function buildForm(asset) {
       <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" onchange="onPhoto(event)">
     </div>
     <div id="photo-preview" style="margin-top:8px"></div>
-    <div style="height:16px"></div>
-  `;
-
-  document.getElementById('btn-save-form').onclick = saveRecord;
+    <div style="height:16px"></div>`;
+  document.getElementById('btn-save-form').onclick=saveRecord;
 }
 
-function changeQty(d) {
-  const el=document.getElementById('qty-input');
-  if(el) el.value=Math.max(0,(parseInt(el.value)||0)+d);
-}
+function changeQty(d){const el=document.getElementById('qty-input');if(el)el.value=Math.max(0,(parseInt(el.value)||0)+d);}
 
-function onPhoto(e) {
-  const file=e.target.files[0]; if(!file) return;
+function onPhoto(e){
+  const file=e.target.files[0];if(!file)return;
   const r=new FileReader();
-  r.onload=ev=>{
-    state.photoDataUrl=ev.target.result;
-    document.getElementById('photo-preview').innerHTML=`<img src="${ev.target.result}" style="width:100%;border-radius:8px;max-height:180px;object-fit:cover">`;
-  };
+  r.onload=ev=>{state.photoDataUrl=ev.target.result;document.getElementById('photo-preview').innerHTML=`<img src="${ev.target.result}" style="width:100%;border-radius:8px;max-height:180px;object-fit:cover">`};
   r.readAsDataURL(file);
 }
 
 // ════════════════════════════════════════════════
-// SAVE RECORD — แก้ bug ld.records.push
+// SAVE RECORD — ส่ง field ครบ, format วันที่ถูกต้อง
 // ════════════════════════════════════════════════
-async function saveRecord() {
-  const asset = state.scannedAsset;
-  if (!asset) return;
+async function saveRecord(){
+  const asset=state.scannedAsset;
+  if(!asset)return;
+  ensureArrays();
 
   const qty       = parseInt(document.getElementById('qty-input').value)||0;
-  const remark    = document.getElementById('form-remark')    ? document.getElementById('form-remark').value    : '';
-  const inspector = document.getElementById('form-inspector') ? document.getElementById('form-inspector').value : '';
+  const remark    = document.getElementById('form-remark')?.value||'';
+  const inspector = document.getElementById('form-inspector')?.value||'';
+  const userName  = state.user?state.user.fullname||state.user.username:'';
 
-  const record = {
+  const params={
+    action:      'saveRecord',
     assetNumber: asset.assetNumber,
     name:        asset.name||'',
     location:    asset.location||state.location,
-    status:      asset.notFound ? 'not_found' : 'found',
-    note:        remark + (inspector ? ' | ' + inspector : ''),
-    countedBy:   (state.user ? state.user.fullname||state.user.username : '') + (inspector ? ' / ' + inspector : ''),
+    status:      asset.notFound?'not_found':'found',
+    qty:         String(qty),
+    remark:      remark,
+    inspector:   inspector,
+    user:        userName,
+    photoUrl:    '',
   };
 
   showLoading('กำลังบันทึก...');
 
-  let gasSaved = false;
-  if (GAS_URL) {
-    const res = await gasGET({ action:'saveRecord', ...record });
-    if (res && res.ok) {
-      gasSaved = true;
-      dbg('✅ บันทึกลง Sheet row=' + res.row, 'ok');
-    } else {
-      dbg('❌ saveRecord: ' + (res ? JSON.stringify(res) : 'no response'), 'err');
-    }
+  let gasSaved=false;
+  if(GAS_URL){
+    const res=await gasGET(params);
+    if(res&&res.ok){gasSaved=true;dbg('✅ บันทึก Sheet row='+res.row,'ok');}
+    else dbg('❌ saveRecord: '+(res?JSON.stringify(res):'no response'),'err');
   }
 
-  // ── Guard: ป้องกัน push ไม่ใช่ function ──────────────────────
-  if (!Array.isArray(ld.records)) {
-    ld.records = [];
-  }
-
-  const localRec = { ...record, qty, ts: new Date().toISOString(), photoDataUrl: state.photoDataUrl };
+  // local
+  if(!Array.isArray(ld.records)) ld.records=[];
+  const localRec={
+    assetNumber: asset.assetNumber,
+    name:        asset.name||'',
+    location:    asset.location||state.location,
+    status:      asset.notFound?'not_found':'found',
+    qty,
+    remark,
+    inspector,
+    user:        userName,
+    ts:          new Date().toISOString(),
+    photoDataUrl:state.photoDataUrl,
+  };
   ld.records.push(localRec);
-  saveL('km23_records', ld.records);
+  saveL('km23_records',ld.records);
 
   hideLoading();
-  toast(gasSaved ? '✅ บันทึกลง Google Sheet แล้ว!' : (GAS_URL ? '⚠️ บันทึก local (GAS ไม่ตอบ)' : '✅ บันทึก local แล้ว!'), gasSaved?'success':'warn');
-  state.photoDataUrl = null;
+  toast(gasSaved?'✅ บันทึกลง Google Sheet แล้ว!':(GAS_URL?'⚠️ บันทึก local (GAS ไม่ตอบ)':'✅ บันทึก local แล้ว!'),gasSaved?'success':'warn');
+  state.photoDataUrl=null;
   goToScan();
 }
 
 // ════════════════════════════════════════════════
 // NAVIGATION
 // ════════════════════════════════════════════════
-function goToScan() { showScreen('scan'); document.getElementById('manual-asset').value=''; setTimeout(startQR,300); }
-function showHistory() { stopQR(); renderHistory(); showScreen('history'); }
-function showSettings() { stopQR(); renderSettings(); showScreen('settings'); }
+function goToScan(){showScreen('scan');document.getElementById('manual-asset').value='';setTimeout(startQR,300);}
+function showHistory(){stopQR();renderHistory();showScreen('history');}
+function showSettings(){stopQR();renderSettings();showScreen('settings');}
 
 // ════════════════════════════════════════════════
-// HISTORY (local)
+// FORMAT DATE — "วัน/เดือน/ปี เวลา" อ่านได้
 // ════════════════════════════════════════════════
-function renderHistory() {
+function fmtDate(iso){
+  if(!iso)return'-';
+  try{
+    const d=new Date(iso);
+    if(isNaN(d))return iso;
+    const dd=String(d.getDate()).padStart(2,'0');
+    const mm=String(d.getMonth()+1).padStart(2,'0');
+    const yyyy=d.getFullYear();
+    const hh=String(d.getHours()).padStart(2,'0');
+    const min=String(d.getMinutes()).padStart(2,'0');
+    return dd+'/'+mm+'/'+yyyy+' '+hh+':'+min;
+  }catch(e){return iso;}
+}
+
+// ════════════════════════════════════════════════
+// HISTORY
+// ════════════════════════════════════════════════
+function renderHistory(){
   ensureArrays();
   const body=document.getElementById('history-body');
   const data=ld.records.filter(r=>r.location===state.location||r.status==='not_found');
-  if(!data.length){
-    body.innerHTML=`<div class="text-center text-muted" style="padding:60px 0"><div style="font-size:48px;margin-bottom:12px">📭</div><div>ยังไม่มีรายการในคลังนี้</div></div>`;
-    return;
-  }
+  if(!data.length){body.innerHTML=`<div class="text-center text-muted" style="padding:60px 0"><div style="font-size:48px;margin-bottom:12px">📭</div><div>ยังไม่มีรายการในคลังนี้</div></div>`;return;}
   body.innerHTML=data.slice().reverse().map(r=>`
     <div class="tx-card">
-      <div class="tx-top"><div class="tx-asset">${r.assetNumber}</div><div class="tx-qty">${r.qty||'-'}</div></div>
+      <div class="tx-top"><div class="tx-asset">${r.assetNumber}</div><div class="tx-qty">${r.qty??'-'}</div></div>
       <div class="tx-name">${r.name||'(ไม่ระบุชื่อ)'}</div>
-      <div class="tx-meta">📍 ${r.location} | 💬 ${r.note||'-'} | 🕐 ${fmtDate(r.ts)}</div>
-    </div>
-  `).join('');
+      <div class="tx-meta">📍 ${r.location||'-'} | 💬 ${r.remark||r.note||'-'} | 👤 ${r.inspector||'-'} | 🕐 ${fmtDate(r.ts)}</div>
+    </div>`).join('');
 }
 
-function fmtDate(iso) {
-  if(!iso) return '-';
-  const d=new Date(iso);
-  return d.toLocaleDateString('th-TH')+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
-}
-
-function exportCSV() {
+function exportCSV(){
   ensureArrays();
   const data=ld.records.filter(r=>r.location===state.location);
   if(!data.length){toast('ไม่มีข้อมูล','error');return;}
-  const h=['Timestamp','AssetNumber','Name','Location','Status','Note','CountedBy','Qty'];
-  const rows=data.map(r=>[r.ts,r.assetNumber,r.name,r.location,r.status,r.note,r.countedBy,r.qty].map(v=>`"${v||''}"`).join(','));
+  const h=['Timestamp','AssetNumber','Name','Location','Status','Qty','Remark','Inspector','User'];
+  const rows=data.map(r=>[fmtDate(r.ts),r.assetNumber,r.name,r.location,r.status,r.qty,r.remark,r.inspector,r.user].map(v=>`"${v??''}"`).join(','));
   const csv=[h.join(','),...rows].join('\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-  a.download=`km23_${state.location}_${Date.now()}.csv`; a.click();
+  a.download=`km23_${state.location}_${Date.now()}.csv`;a.click();
 }
 
 // ════════════════════════════════════════════════
 // SETTINGS
 // ════════════════════════════════════════════════
-function renderSettings() {
+function renderSettings(){
   document.getElementById('gas-url-input').value=GAS_URL;
-  document.getElementById('assets-count-label').textContent=
-    Object.entries(ld.assetCache).map(([k,v])=>k+': '+v.length).join(' | ')||'ยังไม่มี cache';
+  document.getElementById('assets-count-label').textContent=Object.entries(ld.assetCache).map(([k,v])=>k+': '+v.length).join(' | ')||'ยังไม่มี cache';
   renderConfigList('remarks','remarks-list');
   renderConfigList('inspectors','inspectors-list');
-  renderUsers();
-  renderLocSettings();
+  renderUsers(); renderLocSettings();
 }
 
-function saveGASUrl() {
-  const v=document.getElementById('gas-url-input').value.trim();
-  GAS_URL=v; localStorage.setItem('km23_gas_url',v);
-  toast('✅ บันทึก URL แล้ว','success');
-}
+function saveGASUrl(){const v=document.getElementById('gas-url-input').value.trim();GAS_URL=v;localStorage.setItem('km23_gas_url',v);toast('✅ บันทึก URL แล้ว','success');}
 
-async function testGAS() {
-  if (!GAS_URL) { toast('⚠️ ยังไม่ได้ตั้ง URL','error'); return; }
+async function testGAS(){
+  if(!GAS_URL){toast('⚠️ ยังไม่ได้ตั้ง URL','error');return;}
   const el=document.getElementById('test-status');
-  el.textContent='กำลังทดสอบ...';
-  showLoading('ทดสอบ GAS...');
-
-  const ping = await gasGET({ action:'ping' });
-  if (!ping || !ping.ok) {
-    hideLoading(); el.textContent='❌ ping ไม่สำเร็จ — ตรวจ URL และ Deploy'; return;
-  }
-  dbg('✅ ping OK: '+ping.time,'ok');
-
-  const loc = state.location || ld.locations[0] || 'KM23-คลังB';
-  const res  = await gasGET({ action:'getAssets', location: loc });
+  el.textContent='กำลังทดสอบ...'; showLoading('ทดสอบ GAS...');
+  const ping=await gasGET({action:'ping'});
+  if(!ping||!ping.ok){hideLoading();el.textContent='❌ ping ไม่สำเร็จ';return;}
+  dbg('✅ ping: '+ping.msg,'ok');
+  const loc=state.location||ld.locations[0]||'KM23-คลังB';
+  const res=await gasGET({action:'getAssets',location:loc});
   hideLoading();
-  if (res && res.ok) {
-    const msg = '✅ ได้ '+res.total+' assets จาก "'+loc+'" colIndex='+JSON.stringify(res.colIndex);
-    el.textContent = msg;
-    dbg(msg,'ok');
-    if (res.assets && res.assets.length > 0) {
-      dbg('ตัวอย่าง: '+JSON.stringify(res.assets[0]),'ok');
-      ld.assetCache[loc] = res.assets;
-      saveL('km23_assetCache',ld.assetCache);
-    } else {
-      dbg('⚠️ ไม่มี asset — ชื่อ sheet ถูกไหม? header row มีคอลัมน์ location ไหม?','warn');
-    }
-  } else {
-    el.textContent='❌ getAssets error: '+(res?res.error:'no response');
-    dbg('❌ '+JSON.stringify(res),'err');
-  }
+  if(res&&res.ok){
+    el.textContent='✅ ได้ '+res.total+' assets จาก "'+loc+'"';
+    dbg('colIndex: '+JSON.stringify(res.colIndex),'ok');
+    if(res.allLocations) dbg('📋 locations ใน sheet: '+JSON.stringify(res.allLocations),'warn');
+    if(res.assets&&res.assets.length>0){dbg('ตัวอย่าง: '+JSON.stringify(res.assets[0]),'ok');ld.assetCache[loc]=res.assets;saveL('km23_assetCache',ld.assetCache);}
+    else dbg('⚠️ 0 assets — ตรวจชื่อ location ใน sheet','warn');
+  }else{el.textContent='❌ '+(res?res.error:'no response');dbg('❌ '+JSON.stringify(res),'err');}
   renderSettings();
 }
 
-function renderConfigList(type,elId) {
+function renderConfigList(type,elId){
   ensureArrays();
   const data=type==='remarks'?ld.remarks:ld.inspectors;
-  const el=document.getElementById(elId);
-  if(!el) return;
-  el.innerHTML=data.map((item,i)=>`
-    <div class="settings-row">
-      <span>${item}</span>
-      <button class="btn btn-danger btn-sm" onclick="deleteConfig('${type}',${i})">ลบ</button>
-    </div>
-  `).join('')||'<div class="settings-row"><span class="text-muted" style="font-size:13px">ยังไม่มีรายการ</span></div>';
+  const el=document.getElementById(elId);if(!el)return;
+  el.innerHTML=data.map((item,i)=>`<div class="settings-row"><span>${item}</span><button class="btn btn-danger btn-sm" onclick="deleteConfig('${type}',${i})">ลบ</button></div>`).join('')||'<div class="settings-row"><span class="text-muted" style="font-size:13px">ยังไม่มีรายการ</span></div>';
 }
 
-function addConfigItem(type) {
+function addConfigItem(type){
   ensureArrays();
   const id=type==='remarks'?'new-remark-input':'new-inspector-input';
-  const v=document.getElementById(id).value.trim(); if(!v) return;
+  const v=document.getElementById(id).value.trim();if(!v)return;
   if(type==='remarks'){if(!ld.remarks.includes(v)){ld.remarks.push(v);saveL('km23_remarks',ld.remarks);renderConfigList('remarks','remarks-list');}}
   else{if(!ld.inspectors.includes(v)){ld.inspectors.push(v);saveL('km23_inspectors',ld.inspectors);renderConfigList('inspectors','inspectors-list');}}
-  document.getElementById(id).value=''; toast('✅ เพิ่มแล้ว','success');
+  document.getElementById(id).value='';toast('✅ เพิ่มแล้ว','success');
 }
 
-function deleteConfig(type,i) {
+function deleteConfig(type,i){
   ensureArrays();
   if(type==='remarks'){ld.remarks.splice(i,1);saveL('km23_remarks',ld.remarks);renderConfigList('remarks','remarks-list');}
   else{ld.inspectors.splice(i,1);saveL('km23_inspectors',ld.inspectors);renderConfigList('inspectors','inspectors-list');}
 }
 
-function renderLocSettings() {
+function renderLocSettings(){
   ensureArrays();
-  const el=document.getElementById('loc-list-settings');
-  if(!el) return;
-  el.innerHTML=ld.locations.map((loc,i)=>`
-    <div class="settings-row">
-      <span>${loc}</span>
-      ${ld.locations.length>1?`<button class="btn btn-danger btn-sm" onclick="deleteLoc(${i})">ลบ</button>`:''}
-    </div>
-  `).join('');
+  const el=document.getElementById('loc-list-settings');if(!el)return;
+  el.innerHTML=ld.locations.map((loc,i)=>`<div class="settings-row"><span>${loc}</span>${ld.locations.length>1?`<button class="btn btn-danger btn-sm" onclick="deleteLoc(${i})">ลบ</button>`:''}</div>`).join('');
 }
-function addLocation() {
+
+function addLocation(){
   ensureArrays();
-  const v=document.getElementById('new-loc-input').value.trim(); if(!v) return;
+  const v=document.getElementById('new-loc-input').value.trim();if(!v)return;
   if(!ld.locations.includes(v)){ld.locations.push(v);saveL('km23_locations',ld.locations);}
-  document.getElementById('new-loc-input').value=''; renderLocSettings();
-  toast('✅ เพิ่ม location แล้ว','success');
+  document.getElementById('new-loc-input').value='';renderLocSettings();toast('✅ เพิ่ม location แล้ว','success');
 }
+
 function deleteLoc(i){ensureArrays();ld.locations.splice(i,1);saveL('km23_locations',ld.locations);renderLocSettings();}
 
-function renderUsers() {
+function renderUsers(){
   ensureArrays();
-  const el=document.getElementById('users-list'); if(!el) return;
+  const el=document.getElementById('users-list');if(!el)return;
   el.innerHTML=ld.users.map((u,i)=>`
     <div class="user-row">
       <div class="user-info">
@@ -872,10 +746,10 @@ function renderUsers() {
         <div><div class="user-name">${u.fullname||u.username}</div><div class="user-role">@${u.username} · ${u.role==='admin'?'🔴 Admin':'🟢 User'}</div></div>
       </div>
       ${u.username!=='admin'?`<button class="btn btn-danger btn-sm" onclick="deleteUser(${i})">ลบ</button>`:''}
-    </div>
-  `).join('');
+    </div>`).join('');
 }
-function addUser() {
+
+function addUser(){
   ensureArrays();
   const u=document.getElementById('new-username').value.trim();
   const p=document.getElementById('new-password').value.trim();
@@ -884,61 +758,46 @@ function addUser() {
   if(!u||!p){toast('กรอกข้อมูลให้ครบ','error');return;}
   if(ld.users.find(x=>x.username===u)){toast('username ซ้ำ','error');return;}
   ld.users.push({username:u,password:p,fullname:f,role:r});
-  saveL('km23_users',ld.users); closeModal('modal-add-user'); renderUsers();
-  toast('✅ เพิ่มผู้ใช้แล้ว','success');
+  saveL('km23_users',ld.users);closeModal('modal-add-user');renderUsers();toast('✅ เพิ่มผู้ใช้แล้ว','success');
 }
+
 function deleteUser(i){
   ensureArrays();
-  if(!confirm('ลบผู้ใช้ "'+ld.users[i].username+'"?')) return;
-  ld.users.splice(i,1); saveL('km23_users',ld.users); renderUsers();
-  toast('ลบแล้ว','success');
+  if(!confirm('ลบผู้ใช้ "'+ld.users[i].username+'"?'))return;
+  ld.users.splice(i,1);saveL('km23_users',ld.users);renderUsers();toast('ลบแล้ว','success');
 }
 
 // ════════════════════════════════════════════════
 // ADD SKU MODAL
 // ════════════════════════════════════════════════
-function openAddSkuModal(num) {
-  document.getElementById('new-sku-id').value       = num;
-  document.getElementById('new-sku-group').value    = '';
-  document.getElementById('new-sku-name').value     = '';
-  document.getElementById('new-sku-location').value = state.location;
+function openAddSkuModal(num){
+  document.getElementById('new-sku-id').value=num;
+  document.getElementById('new-sku-group').value='';
+  document.getElementById('new-sku-name').value='';
+  document.getElementById('new-sku-location').value=state.location;
   openModal('modal-add-sku');
 }
-function saveNewSku() {
-  const a = {
-    assetNumber: document.getElementById('new-sku-id').value,
-    group:       document.getElementById('new-sku-group').value.trim(),
-    name:        document.getElementById('new-sku-name').value.trim(),
-    location:    state.location,
-  };
+
+function saveNewSku(){
+  const a={assetNumber:document.getElementById('new-sku-id').value,group:document.getElementById('new-sku-group').value.trim(),name:document.getElementById('new-sku-name').value.trim(),location:state.location};
   if(!a.name){toast('กรอกชื่อสินทรัพย์','error');return;}
-  if(!ld.assetCache[state.location]) ld.assetCache[state.location]=[];
-  ld.assetCache[state.location].push(a);
-  saveL('km23_assetCache',ld.assetCache);
-  closeModal('modal-add-sku');
-  state.scannedAsset=a; buildForm(a);
-  toast('✅ เพิ่ม Asset แล้ว','success');
+  if(!ld.assetCache[state.location])ld.assetCache[state.location]=[];
+  ld.assetCache[state.location].push(a);saveL('km23_assetCache',ld.assetCache);
+  closeModal('modal-add-sku');state.scannedAsset=a;buildForm(a);toast('✅ เพิ่ม Asset แล้ว','success');
 }
 
 // ════════════════════════════════════════════════
-// MODAL
+// MODAL & DEBUG
 // ════════════════════════════════════════════════
-function openModal(id)  { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(o => {
-  o.addEventListener('click', e => { if(e.target===o) closeModal(o.id); });
-});
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)closeModal(o.id);});});
 
-// ════════════════════════════════════════════════
-// DEBUG BOX
-// ════════════════════════════════════════════════
-function dbg(msg, cls='') {
-  const box=document.getElementById('debug-box');
-  if(!box) return;
-  const p=document.createElement('p');
-  p.className=cls;
+function dbg(msg,cls=''){
+  const box=document.getElementById('debug-box');if(!box)return;
+  const p=document.createElement('p');p.className=cls;
   p.textContent=new Date().toLocaleTimeString('th')+' '+msg;
-  box.appendChild(p); box.scrollTop=box.scrollHeight;
+  box.appendChild(p);box.scrollTop=box.scrollHeight;
   console.log('[KM23]',msg);
 }
 </script>
