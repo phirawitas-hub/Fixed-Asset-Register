@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>KM23 Stock Count</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --accent: #f0a500;
+    --accent2: #e85d04;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --green: #3fb950;
+    --red: #f85149;
+    --blue: #58a6ff;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; min-height: 100dvh; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* ===== LOGIN ===== */
+  #screen-login {
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 0%, #1a2332 0%, #0d1117 60%);
+    padding: 24px;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 32px;
+  }
+  .logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .logo-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 16px;
+    box-shadow: 0 8px 32px rgba(240,165,0,0.3);
+  }
+  .logo h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.5px; }
+  .logo p { color: var(--text2); font-size: 13px; margin-top: 4px; }
+
+  .field-group { margin-bottom: 16px; }
+  .field-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: block; }
+  input, select, textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b949e' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%;
+    padding: 13px 20px;
+    border: none; border-radius: var(--radius);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #000; }
+  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); filter: brightness(0.95); }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text2); }
+  .btn-ghost:hover { border-color: var(--text2); color: var(--text); }
+  .btn-danger { background: rgba(248,81,73,0.15); border: 1px solid rgba(248,81,73,0.3); color: var(--red); }
+  .btn-sm { padding: 8px 14px; font-size: 13px; width: auto; }
+
+  .error-msg { color: var(--red); font-size: 13px; margin-top: 8px; text-align: center; }
+
+  /* ===== TOPBAR ===== */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,17,23,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .topbar-title { flex: 1; font-size: 16px; font-weight: 700; }
+  .topbar-sub { font-size: 11px; color: var(--text2); font-weight: 400; display: block; }
+  .badge {
+    font-size: 11px; font-weight: 600; padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(240,165,0,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(240,165,0,0.3);
+  }
+  .badge-red { background: rgba(248,81,73,0.15); color: var(--red); border-color: rgba(248,81,73,0.3); }
+  .icon-btn { background: none; border: none; color: var(--text2); cursor: pointer; padding: 6px; border-radius: 8px; font-size: 18px; transition: color 0.2s; }
+  .icon-btn:hover { color: var(--text); background: var(--surface2); }
+
+  /* ===== LOCATION SELECT ===== */
+  #screen-location { padding: 24px 16px; }
+  .location-header { text-align: center; padding: 40px 0 32px; }
+  .location-header h2 { font-size: 26px; font-weight: 700; }
+  .location-header p { color: var(--text2); margin-top: 8px; }
+
+  .loc-cards { display: flex; flex-direction: column; gap: 12px; }
+  .loc-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .loc-card:hover, .loc-card.selected { border-color: var(--accent); background: rgba(240,165,0,0.05); }
+  .loc-icon { font-size: 28px; }
+  .loc-name { font-size: 17px; font-weight: 600; }
+  .loc-desc { color: var(--text2); font-size: 13px; margin-top: 2px; }
+
+  /* ===== SCAN ===== */
+  #screen-scan { background: #000; }
+  #qr-reader { width: 100%; }
+  #qr-reader video { width: 100% !important; }
+  .scan-overlay {
+    position: fixed; inset: 0; pointer-events: none; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .scan-frame {
+    width: 260px; height: 260px;
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+    position: relative;
+  }
+  .scan-frame::before, .scan-frame::after {
+    content: ''; position: absolute;
+    width: 30px; height: 30px;
+    border-color: var(--accent); border-style: solid;
+  }
+  .scan-frame::before { top: -2px; left: -2px; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+  .scan-frame::after { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+  .scan-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scanAnim 2s ease-in-out infinite;
+    top: 0;
+  }
+  @keyframes scanAnim { 0%,100%{top:0} 50%{top:calc(100% - 2px)} }
+
+  .scan-bottom {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.95));
+    padding: 40px 20px 32px;
+    z-index: 20;
+  }
+  .scan-hint { text-align: center; color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 12px; }
+  .manual-input-row { display: flex; gap: 8px; }
+  .manual-input-row input { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+
+  /* ===== FORM ===== */
+  #screen-form { overflow-y: auto; }
+  .form-body { padding: 16px; flex: 1; }
+
+  .asset-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .asset-card.not-found { border-color: var(--red); }
+  .asset-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+  .asset-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(88,166,255,0.15);
+    color: var(--blue);
+    border: 1px solid rgba(88,166,255,0.3);
+    white-space: nowrap;
+  }
+  .asset-name { font-size: 15px; font-weight: 600; line-height: 1.3; flex: 1; }
+  .asset-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .meta-item { }
+  .meta-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+  .meta-value { font-size: 13px; font-weight: 500; margin-top: 2px; }
+
+  .qty-row {
+    display: flex; align-items: center; gap: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .qty-btn {
+    width: 52px; height: 52px;
+    background: none; border: none; color: var(--text);
+    font-size: 22px; cursor: pointer;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .qty-btn:active { background: var(--border); }
+  .qty-input {
+    flex: 1; text-align: center;
+    font-size: 24px; font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    background: none; border: none; border-radius: 0;
+    padding: 0;
+    height: 52px;
+  }
+
+  .section-title { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; margin-top: 20px; }
+
+  .photo-area {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .photo-area:hover { border-color: var(--accent); }
+  .photo-area img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; }
+  .photo-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .photo-icon { font-size: 32px; margin-bottom: 8px; }
+  .photo-hint { color: var(--text2); font-size: 13px; }
+
+  .form-footer {
+    position: sticky; bottom: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 16px;
+    display: flex; gap: 10px;
+  }
+
+  /* ===== MENU / TABS ===== */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 50;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 10px 0 8px;
+    cursor: pointer; background: none; border: none; color: var(--text2);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+  }
+  .nav-item .nav-icon { font-size: 20px; margin-bottom: 2px; }
+  .nav-item.active { color: var(--accent); }
+
+  /* ===== HISTORY ===== */
+  #screen-history { overflow-y: auto; }
+  .history-body { padding: 16px; padding-bottom: 80px; }
+  .filter-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .filter-chip {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text2);
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .filter-chip.active { background: rgba(240,165,0,0.15); border-color: var(--accent); color: var(--accent); }
+
+  .tx-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .tx-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .tx-asset { font-size: 13px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+  .tx-qty { font-size: 18px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; color: var(--green); }
+  .tx-name { font-size: 14px; color: var(--text); margin-bottom: 4px; }
+  .tx-meta { font-size: 12px; color: var(--text2); }
+  .tx-photo { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; float: right; margin-left: 10px; }
+
+  /* ===== SETTINGS ===== */
+  #screen-settings { overflow-y: auto; }
+  .settings-body { padding: 16px; padding-bottom: 80px; }
+  .settings-section { margin-bottom: 24px; }
+  .settings-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .settings-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .settings-row:last-child { border-bottom: none; }
+  .settings-row-label { font-size: 14px; font-weight: 500; }
+  .settings-row-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
+
+  .user-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .user-row:last-child { border-bottom: none; }
+  .user-info { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #000; flex-shrink: 0; }
+  .user-name { font-size: 14px; font-weight: 600; }
+  .user-role { font-size: 12px; color: var(--text2); }
+
+  /* ===== LOG ===== */
+  #screen-log { overflow-y: auto; }
+  .log-body { padding: 16px; padding-bottom: 80px; }
+  .log-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .log-table th { text-align: left; padding: 8px 10px; color: var(--text2); font-weight: 600; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .log-table td { padding: 10px; border-bottom: 1px solid rgba(48,54,61,0.5); vertical-align: top; }
+  .log-table tr:hover td { background: var(--surface); }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    z-index: 200; display: none; align-items: flex-end; justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    width: 100%; max-width: 480px;
+    max-height: 80dvh;
+    overflow-y: auto;
+  }
+  .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 14px; font-weight: 500;
+    white-space: nowrap;
+    z-index: 300;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: var(--green); color: var(--green); }
+  .toast.error { border-color: var(--red); color: var(--red); }
+
+  /* ===== LOADING ===== */
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-overlay {
+    position: fixed; inset: 0; background: rgba(13,17,23,0.8);
+    z-index: 400; display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 12px;
+  }
+  .loading-overlay.show { display: flex; }
+  .loading-text { color: var(--text2); font-size: 13px; }
+
+  /* ===== UTILS ===== */
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .text-center { text-align: center; }
+  .text-muted { color: var(--text2); }
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .flex { display: flex; }
+  .gap-8 { gap: 8px; }
+  .align-center { align-items: center; }
+  .pb-80 { padding-bottom: 80px; }
+
+  /* dropdown with add */
+  .select-add-row { display: flex; gap: 8px; }
+  .select-add-row select { flex: 1; }
+
+  /* not found state */
+  .not-found-msg {
+    text-align: center; padding: 24px 16px;
+  }
+  .not-found-icon { font-size: 48px; margin-bottom: 12px; }
+  .not-found-title { font-size: 16px; font-weight: 600; color: var(--red); margin-bottom: 4px; }
+  .not-found-sub { color: var(--text2); font-size: 13px; }
+
+  /* config tag */
+  .config-note {
+    font-size: 11px; color: var(--accent);
+    background: rgba(240,165,0,0.1);
+    border: 1px solid rgba(240,165,0,0.2);
+    border-radius: 6px;
+    padding: 2px 8px;
+    display: inline-block;
+    margin-top: 4px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (min-width: 600px) {
+    .form-body { max-width: 520px; margin: 0 auto; }
+    .login-card { padding: 48px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== LOADING ===== -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner" style="width:32px;height:32px;border-width:3px;border-top-color:var(--accent)"></div>
+  <div class="loading-text" id="loading-text">กำลังโหลด...</div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<!-- ===== LOGIN ===== -->
+<div class="screen active" id="screen-login">
+  <div class="login-card">
+    <div class="logo">
+      <div class="logo-icon">📦</div>
+      <h1>KM23 Stock Count</h1>
+      <p>ระบบตรวจนับสินค้าคงคลัง</p>
+    </div>
+    <div class="field-group">
+      <label class="field-label">ชื่อผู้ใช้</label>
+      <input type="text" id="login-user" placeholder="username" autocomplete="username">
+    </div>
+    <div class="field-group">
+      <label class="field-label">รหัสผ่าน</label>
+      <input type="password" id="login-pass" placeholder="password" autocomplete="current-password">
+    </div>
+    <div class="error-msg" id="login-error"></div>
+    <div style="margin-top:20px">
+      <button class="btn btn-primary" id="btn-login">🔐 เข้าสู่ระบบ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOCATION SELECT ===== -->
+<div class="screen" id="screen-location">
+  <div class="topbar">
+    <div class="logo-icon" style="width:32px;height:32px;font-size:14px;border-radius:8px;flex-shrink:0">📦</div>
+    <div class="topbar-title">
+      KM23 Stock Count
+      <span class="topbar-sub" id="topbar-username">-</span>
+    </div>
+    <button class="icon-btn" id="btn-logout-loc" title="ออกจากระบบ">🚪</button>
+  </div>
+  <div style="padding:24px 16px;flex:1">
+    <div class="location-header">
+      <h2>เลือกคลังสินค้า</h2>
+      <p class="text-muted">เลือกคลังที่ต้องการตรวจนับ</p>
+    </div>
+    <div class="loc-cards">
+      <div class="loc-card" onclick="selectLocation('KM23-คลังB')">
+        <div class="loc-icon">🏭</div>
+        <div>
+          <div class="loc-name">KM23-คลังB</div>
+          <div class="loc-desc">คลังหลัก B</div>
+        </div>
+      </div>
+      <div class="loc-card" onclick="selectLocation('KM23-คลังA_2026')">
+        <div class="loc-icon">🏗️</div>
+        <div>
+          <div class="loc-name">KM23-คลังA_2026</div>
+          <div class="loc-desc">คลัง A ปี 2026</div>
+        </div>
+      </div>
+      <div class="loc-card" onclick="selectLocation('KM23Office')">
+        <div class="loc-icon">🏢</div>
+        <div>
+          <div class="loc-name">KM23Office</div>
+          <div class="loc-desc">สำนักงาน</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCAN ===== -->
+<div class="screen" id="screen-scan">
+  <div class="topbar" style="position:fixed;top:0;left:0;right:0;z-index:30">
+    <button class="icon-btn" onclick="goToLocation()">◀</button>
+    <div class="topbar-title">
+      แสกน QR Code
+      <span class="topbar-sub" id="scan-location-label">-</span>
+    </div>
+    <button class="icon-btn" onclick="showHistory()">📋</button>
+  </div>
+  <div style="margin-top:56px;flex:1;position:relative;background:#000;">
+    <div id="qr-reader"></div>
+    <div class="scan-overlay">
+      <div class="scan-frame">
+        <div class="scan-line"></div>
+      </div>
+    </div>
+  </div>
+  <div class="scan-bottom">
+    <div class="scan-hint">วางบาร์โค้ด/QR Code ภายในกรอบ หรือกรอก Asset Number ด้านล่าง</div>
+    <div class="manual-input-row">
+      <input type="text" id="manual-asset" placeholder="Fixed Asset Number..." style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff">
+      <button class="btn btn-primary btn-sm" style="width:auto;white-space:nowrap" onclick="manualSearch()">ค้นหา</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FORM ===== -->
+<div class="screen" id="screen-form">
+  <div class="topbar">
+    <button class="icon-btn" id="btn-back-scan">◀</button>
+    <div class="topbar-title">
+      บันทึกสินค้า
+      <span class="topbar-sub" id="form-location-label">-</span>
+    </div>
+    <span class="badge" id="form-asset-badge">-</span>
+  </div>
+
+  <div class="form-body" id="form-body">
+    <!-- filled by JS -->
+  </div>
+
+  <div class="form-footer">
+    <button class="btn btn-ghost" style="flex:0.4" id="btn-cancel-form">ยกเลิก</button>
+    <button class="btn btn-primary" style="flex:1" id="btn-save-form">💾 บันทึก</button>
+  </div>
+</div>
+
+<!-- ===== HISTORY ===== -->
+<div class="screen" id="screen-history">
+  <div class="topbar">
+    <button class="icon-btn" id="btn-back-history">◀</button>
+    <div class="topbar-title">ประวัติการนับ</div>
+    <button class="icon-btn" id="btn-export">📤</button>
+  </div>
+  <div class="history-body" id="history-body">
+    <!-- filled by JS -->
+  </div>
+  <div class="bottom-nav" id="history-nav" style="display:none"></div>
+</div>
+
+<!-- ===== SETTINGS (Admin only) ===== -->
+<div class="screen" id="screen-settings">
+  <div class="topbar">
+    <button class="icon-btn" onclick="goToScan()">◀</button>
+    <div class="topbar-title">ตั้งค่าระบบ <span class="badge badge-red">Admin</span></div>
+  </div>
+  <div class="settings-body">
+    <!-- Users -->
+    <div class="settings-section">
+      <div class="section-title">👥 จัดการผู้ใช้งาน</div>
+      <div class="settings-card" id="users-list">
+        <!-- filled by JS -->
+      </div>
+      <button class="btn btn-ghost mt-8" onclick="openAddUserModal()">+ เพิ่มผู้ใช้ใหม่</button>
+    </div>
+
+    <!-- Remarks Config -->
+    <div class="settings-section">
+      <div class="section-title">💬 Remarks (ตัวเลือก)</div>
+      <div class="settings-card" id="remarks-list"><!-- filled --></div>
+      <div class="flex gap-8 mt-8">
+        <input type="text" id="new-remark-input" placeholder="เพิ่ม Remark ใหม่..." style="flex:1">
+        <button class="btn btn-ghost btn-sm" style="white-space:nowrap" onclick="addConfigItem('remarks')">+ เพิ่ม</button>
+      </div>
+    </div>
+
+    <!-- Inspectors Config -->
+    <div class="settings-section">
+      <div class="section-title">👤 ผู้ตรวจนับ (ตัวเลือก)</div>
+      <div class="settings-card" id="inspectors-list"><!-- filled --></div>
+      <div class="flex gap-8 mt-8">
+        <input type="text" id="new-inspector-input" placeholder="เพิ่มชื่อผู้ตรวจนับ...">
+        <button class="btn btn-ghost btn-sm" style="white-space:nowrap" onclick="addConfigItem('inspectors')">+ เพิ่ม</button>
+      </div>
+    </div>
+
+    <!-- Apps Script URL -->
+    <div class="settings-section">
+      <div class="section-title">🔧 Google Apps Script URL</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Web App URL</div>
+            <div class="settings-row-sub">ใส่ URL ของ Apps Script ที่ Deploy แล้ว</div>
+          </div>
+        </div>
+        <div style="padding:12px 16px">
+          <input type="url" id="gas-url-input" placeholder="https://script.google.com/macros/s/..." style="font-size:12px">
+          <button class="btn btn-primary mt-8" onclick="saveGASUrl()">บันทึก URL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction Log -->
+    <div class="settings-section">
+      <div class="section-title">📊 Transaction Log</div>
+      <div class="settings-card">
+        <div class="settings-row" style="cursor:pointer" onclick="showLog()">
+          <div>
+            <div class="settings-row-label">ดู Transaction Log</div>
+            <div class="settings-row-sub">ประวัติการบันทึกทั้งหมด</div>
+          </div>
+          <span style="color:var(--text2)">▶</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:16px 0">
+      <button class="btn btn-danger" onclick="logout()">🚪 ออกจากระบบ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TRANSACTION LOG (Admin) ===== -->
+<div class="screen" id="screen-log">
+  <div class="topbar">
+    <button class="icon-btn" onclick="goToSettings()">◀</button>
+    <div class="topbar-title">Transaction Log <span class="badge badge-red">Admin</span></div>
+    <button class="icon-btn" onclick="loadLog()">🔄</button>
+  </div>
+  <div class="log-body">
+    <div style="overflow-x:auto">
+      <table class="log-table" id="log-table">
+        <thead>
+          <tr>
+            <th>เวลา</th>
+            <th>Asset No.</th>
+            <th>ชื่อ</th>
+            <th>คลัง</th>
+            <th>จำนวน</th>
+            <th>ผู้นับ</th>
+            <th>Remark</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="log-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<!-- Add User Modal -->
+<div class="modal-overlay" id="modal-add-user">
+  <div class="modal">
+    <div class="modal-title">➕ เพิ่มผู้ใช้ใหม่</div>
+    <div class="field-group">
+      <label class="field-label">ชื่อผู้ใช้ (username)</label>
+      <input type="text" id="new-username">
+    </div>
+    <div class="field-group">
+      <label class="field-label">รหัสผ่าน</label>
+      <input type="password" id="new-password">
+    </div>
+    <div class="field-group">
+      <label class="field-label">ชื่อ-นามสกุล</label>
+      <input type="text" id="new-fullname">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Role</label>
+      <select id="new-role">
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+    <div class="flex gap-8 mt-16">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-user')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="addUser()">เพิ่มผู้ใช้</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add SKU Modal -->
+<div class="modal-overlay" id="modal-add-sku">
+  <div class="modal">
+    <div class="modal-title">➕ เพิ่ม Asset ใหม่</div>
+    <div class="field-group">
+      <label class="field-label">Fixed Asset Number</label>
+      <input type="text" id="new-sku-id" readonly style="opacity:0.6">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Fixed Asset Group</label>
+      <input type="text" id="new-sku-group" placeholder="เช่น IT Equipment">
+    </div>
+    <div class="field-group">
+      <label class="field-label">ชื่อสินทรัพย์</label>
+      <input type="text" id="new-sku-name" placeholder="ชื่อสินทรัพย์">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Location</label>
+      <select id="new-sku-location">
+        <option>KM23-คลังB</option>
+        <option>KM23-คลังA_2026</option>
+        <option>KM23Office</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Acquisition Date</label>
+      <input type="date" id="new-sku-date">
+    </div>
+    <div class="flex gap-8 mt-16">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-sku')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveNewSku()">บันทึก Asset</button>
+    </div>
+  </div>
+</div>
+
+<!-- Image Viewer -->
+<div class="modal-overlay" id="modal-image" onclick="closeModal('modal-image')">
+  <div style="max-width:480px;width:100%">
+    <img id="modal-image-src" src="" style="width:100%;border-radius:12px;max-height:80dvh;object-fit:contain">
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG - แก้ตรงนี้
+// ============================================================
+let GAS_URL = localStorage.getItem('gas_url') || '';
+
+// Default data (ถ้าไม่มี GAS จะใช้ local storage แทน)
+let appState = {
+  currentUser: null,
+  currentLocation: null,
+  scannedAsset: null,
+  photoDataUrl: null,
+  photoFile: null,
+};
+
+// ====== LOCAL STORAGE HELPERS ======
+function loadLocalData(key, def) {
+  try { return JSON.parse(localStorage.getItem(key)) || def; } catch(e) { return def; }
+}
+function saveLocalData(key, val) {
+  localStorage.setItem(key, JSON.stringify(val));
+}
+
+// ====== INIT DATA ======
+let users = loadLocalData('users', [
+  { username: 'admin', password: 'admin1234', fullname: 'ผู้ดูแลระบบ', role: 'admin' },
+  { username: 'user1', password: '1234', fullname: 'ผู้ตรวจนับ 1', role: 'user' },
+]);
+let assetInfo = loadLocalData('assetInfo', [
+  // ตัวอย่างข้อมูล - จะโหลดจาก GAS จริงๆ
+  { assetNumber: 'KM23-001', group: 'IT Equipment', name: 'คอมพิวเตอร์ Dell', location: 'KM23Office', acquisitionDate: '2023-01-15' },
+  { assetNumber: 'KM23-002', group: 'Furniture', name: 'โต๊ะทำงาน', location: 'KM23Office', acquisitionDate: '2022-06-10' },
+  { assetNumber: 'KM23-B01', group: 'Machinery', name: 'เครื่องจักร A', location: 'KM23-คลังB', acquisitionDate: '2021-03-20' },
+]);
+let records = loadLocalData('records', []);
+let remarks = loadLocalData('remarks', ['ชำรุด', 'สมบูรณ์', 'รอซ่อม', 'สูญหาย']);
+let inspectors = loadLocalData('inspectors', ['สมชาย ใจดี', 'สมหญิง รักงาน', 'วิชัย ขยัน']);
+let txLog = loadLocalData('txLog', []);
+
+// ====== SCREENS ======
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+// ====== LOADING / TOAST ======
+function showLoading(text='กำลังโหลด...') {
+  document.getElementById('loading-text').textContent = text;
+  document.getElementById('loading-overlay').classList.add('show');
+}
+function hideLoading() {
+  document.getElementById('loading-overlay').classList.remove('show');
+}
+function showToast(msg, type='', duration=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => t.className = 'toast', duration);
+}
+
+// ====== GAS API HELPER ======
+async function gasCall(action, data={}) {
+  if (!GAS_URL) {
+    // Demo mode - ใช้ local storage
+    return { status: 'ok', demo: true };
+  }
+  try {
+    const params = new URLSearchParams({ action, ...data });
+    const res = await fetch(GAS_URL + '?' + params);
+    return await res.json();
+  } catch(e) {
+    console.warn('GAS Error:', e);
+    return null;
+  }
+}
+
+async function gasPost(action, body) {
+  if (!GAS_URL) return { status: 'ok', demo: true };
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action, ...body })
+    });
+    return await res.json();
+  } catch(e) {
+    console.warn('GAS POST Error:', e);
+    return null;
+  }
+}
+
+// ====== LOGIN ======
+document.getElementById('btn-login').addEventListener('click', doLogin);
+document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+async function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  err.textContent = '';
+
+  if (!u || !p) { err.textContent = 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน'; return; }
+
+  showLoading('กำลังตรวจสอบ...');
+
+  // ถ้ามี GAS ให้ verify จาก sheet; ไม่งั้นใช้ local
+  let userData = null;
+  if (GAS_URL) {
+    const res = await gasCall('login', { username: u, password: p });
+    if (res && res.status === 'ok') {
+      userData = res.user;
+    }
+  } else {
+    // Reload latest local users
+    users = loadLocalData('users', users);
+    userData = users.find(x => x.username === u && x.password === p);
+  }
+
+  hideLoading();
+
+  if (!userData) {
+    err.textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+    return;
+  }
+
+  appState.currentUser = userData;
+  document.getElementById('topbar-username').textContent = userData.fullname || userData.username;
+  showScreen('location');
+}
+
+// ====== LOGOUT ======
+function logout() {
+  stopQR();
+  appState.currentUser = null;
+  appState.currentLocation = null;
+  showScreen('login');
+}
+document.getElementById('btn-logout-loc').addEventListener('click', logout);
+
+// ====== LOCATION ======
+async function selectLocation(loc) {
+  appState.currentLocation = loc;
+  document.getElementById('scan-location-label').textContent = loc;
+  document.getElementById('form-location-label').textContent = loc;
+
+  // Load asset info from GAS
+  if (GAS_URL) {
+    showLoading('โหลดข้อมูลสินค้า...');
+    const res = await gasCall('getAssets', { location: loc });
+    if (res && res.assets) {
+      assetInfo = res.assets;
+      saveLocalData('assetInfo', assetInfo);
+    }
+    // Load config
+    const cfg = await gasCall('getConfig');
+    if (cfg) {
+      if (cfg.remarks) { remarks = cfg.remarks; saveLocalData('remarks', remarks); }
+      if (cfg.inspectors) { inspectors = cfg.inspectors; saveLocalData('inspectors', inspectors); }
+    }
+    hideLoading();
+  }
+
+  showScreen('scan');
+  startQR();
+}
+
+function goToLocation() {
+  stopQR();
+  showScreen('location');
+}
+
+// ====== QR SCANNER ======
+let qrScanner = null;
+let scanCooldown = false;
+
+function startQR() {
+  if (qrScanner) return;
+  try {
+    qrScanner = new Html5Qrcode('qr-reader');
+    qrScanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      (decodedText) => {
+        if (scanCooldown) return;
+        scanCooldown = true;
+        setTimeout(() => scanCooldown = false, 2000);
+        handleAssetScan(decodedText.trim());
+      },
+      () => {}
+    ).catch(e => console.warn('QR start:', e));
+  } catch(e) { console.warn('QR init:', e); }
+}
+
+function stopQR() {
+  if (qrScanner) {
+    qrScanner.stop().then(() => { qrScanner.clear(); qrScanner = null; }).catch(() => { qrScanner = null; });
+  }
+}
+
+function manualSearch() {
+  const val = document.getElementById('manual-asset').value.trim();
+  if (!val) return;
+  handleAssetScan(val);
+}
+
+function handleAssetScan(assetNumber) {
+  stopQR();
+  const asset = assetInfo.find(a =>
+    a.assetNumber === assetNumber &&
+    a.location === appState.currentLocation
+  );
+  appState.scannedAsset = asset || { assetNumber, notFound: true };
+  appState.photoDataUrl = null;
+  buildForm(appState.scannedAsset);
+  showScreen('form');
+}
+
+// ====== FORM ======
+function buildForm(asset) {
+  document.getElementById('form-asset-badge').textContent = asset.assetNumber;
+  const body = document.getElementById('form-body');
+
+  const remarksOpts = remarks.map(r => `<option value="${r}">${r}</option>`).join('');
+  const inspOpts = inspectors.map(i => `<option value="${i}">${i}</option>`).join('');
+
+  let assetSection = '';
+  if (asset.notFound) {
+    assetSection = `
+      <div class="asset-card not-found">
+        <div class="not-found-msg">
+          <div class="not-found-icon">⚠️</div>
+          <div class="not-found-title">ไม่พบสินทรัพย์ในระบบ</div>
+          <div class="not-found-sub">${asset.assetNumber}<br>ไม่พบในคลัง "${appState.currentLocation}"</div>
+        </div>
+        <button class="btn btn-ghost" style="margin-top:8px" onclick="openAddSkuModal('${asset.assetNumber}')">
+          ➕ เพิ่มสินทรัพย์ใหม่
+        </button>
+      </div>
+    `;
+  } else {
+    assetSection = `
+      <div class="asset-card">
+        <div class="asset-header">
+          <div class="asset-badge">${asset.assetNumber}</div>
+        </div>
+        <div class="asset-name" style="margin-bottom:12px">${asset.name}</div>
+        <div class="asset-meta">
+          <div class="meta-item">
+            <div class="meta-label">กลุ่มสินทรัพย์</div>
+            <div class="meta-value">${asset.group || '-'}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Location</div>
+            <div class="meta-value">${asset.location || '-'}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">วันที่ได้รับ</div>
+            <div class="meta-value">${asset.acquisitionDate || '-'}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  body.innerHTML = `
+    ${assetSection}
+
+    <div class="section-title">จำนวน</div>
+    <div class="qty-row">
+      <button class="qty-btn" onclick="changeQty(-1)">−</button>
+      <input class="qty-input" id="qty-input" type="number" value="1" min="0" inputmode="numeric">
+      <button class="qty-btn" onclick="changeQty(1)">+</button>
+    </div>
+
+    <div class="section-title" style="margin-top:16px">Location คลัง</div>
+    <select id="form-location-sel">
+      <option ${appState.currentLocation==='KM23-คลังB'?'selected':''}>KM23-คลังB</option>
+      <option ${appState.currentLocation==='KM23-คลังA_2026'?'selected':''}>KM23-คลังA_2026</option>
+      <option ${appState.currentLocation==='KM23Office'?'selected':''}>KM23Office</option>
+    </select>
+
+    <div class="section-title" style="margin-top:16px">
+      Remarks
+      <span class="config-note">Config</span>
+    </div>
+    <div class="select-add-row">
+      <select id="form-remark">${remarksOpts}</select>
+      <button class="btn btn-ghost btn-sm" style="white-space:nowrap" onclick="addInlineConfig('remarks','form-remark','new-remark-inline')">+ เพิ่ม</button>
+    </div>
+    <input type="text" id="new-remark-inline" placeholder="Remark ใหม่..." style="display:none;margin-top:8px">
+
+    <div class="section-title" style="margin-top:16px">
+      ผู้ตรวจนับ
+      <span class="config-note">Config</span>
+    </div>
+    <div class="select-add-row">
+      <select id="form-inspector">${inspOpts}</select>
+      <button class="btn btn-ghost btn-sm" style="white-space:nowrap" onclick="addInlineConfig('inspectors','form-inspector','new-insp-inline')">+ เพิ่ม</button>
+    </div>
+    <input type="text" id="new-insp-inline" placeholder="ชื่อผู้ตรวจนับใหม่..." style="display:none;margin-top:8px">
+
+    <div class="section-title" style="margin-top:16px">รูปถ่าย (ไม่บังคับ)</div>
+    <div class="photo-area" id="photo-area" onclick="triggerPhoto()">
+      <div class="photo-icon">📷</div>
+      <div class="photo-hint">แตะเพื่อถ่ายรูป / เลือกรูป</div>
+      <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" onchange="onPhotoChange(event)">
+    </div>
+
+    <div style="height:16px"></div>
+  `;
+}
+
+function changeQty(delta) {
+  const inp = document.getElementById('qty-input');
+  if (!inp) return;
+  const v = Math.max(0, (parseInt(inp.value) || 0) + delta);
+  inp.value = v;
+}
+
+function triggerPhoto() {
+  document.getElementById('photo-input').click();
+}
+
+function onPhotoChange(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  appState.photoFile = file;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    appState.photoDataUrl = ev.target.result;
+    const area = document.getElementById('photo-area');
+    area.innerHTML = `
+      <img src="${ev.target.result}" onclick="openImageModal('${ev.target.result}')" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;cursor:pointer">
+      <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" onchange="onPhotoChange(event)">
+      <div style="text-align:center;margin-top:8px;font-size:12px;color:var(--text2)">แตะรูปเพื่อดูใหญ่ | <span style="color:var(--accent);cursor:pointer" onclick="event.stopPropagation();triggerPhoto()">เปลี่ยนรูป</span></div>
+    `;
+  };
+  reader.readAsDataURL(file);
+}
+
+function addInlineConfig(type, selectId, inlineId) {
+  const inp = document.getElementById(inlineId);
+  if (inp.style.display === 'none') {
+    inp.style.display = 'block';
+    inp.focus();
+    inp.onkeydown = async (e) => {
+      if (e.key === 'Enter') await confirmInlineConfig(type, selectId, inlineId);
+    };
+  } else {
+    confirmInlineConfig(type, selectId, inlineId);
+  }
+}
+
+async function confirmInlineConfig(type, selectId, inlineId) {
+  const inp = document.getElementById(inlineId);
+  const val = inp.value.trim();
+  if (!val) { inp.style.display = 'none'; return; }
+
+  if (type === 'remarks') {
+    if (!remarks.includes(val)) {
+      remarks.push(val);
+      saveLocalData('remarks', remarks);
+      await gasPost('addConfig', { type: 'remarks', value: val });
+    }
+  } else {
+    if (!inspectors.includes(val)) {
+      inspectors.push(val);
+      saveLocalData('inspectors', inspectors);
+      await gasPost('addConfig', { type: 'inspectors', value: val });
+    }
+  }
+
+  const sel = document.getElementById(selectId);
+  const opt = document.createElement('option');
+  opt.value = val; opt.text = val; opt.selected = true;
+  sel.add(opt);
+  inp.value = '';
+  inp.style.display = 'none';
+  showToast('✅ เพิ่มตัวเลือกแล้ว', 'success');
+}
+
+// ====== SAVE ======
+document.getElementById('btn-save-form').addEventListener('click', saveRecord);
+document.getElementById('btn-cancel-form').addEventListener('click', () => { goToScan(); });
+document.getElementById('btn-back-scan').addEventListener('click', () => { goToScan(); });
+
+async function saveRecord() {
+  const qtyEl = document.getElementById('qty-input');
+  const remarkEl = document.getElementById('form-remark');
+  const inspEl = document.getElementById('form-inspector');
+  const locationEl = document.getElementById('form-location-sel');
+
+  if (!qtyEl) return;
+
+  const qty = parseInt(qtyEl.value) || 0;
+  const remark = remarkEl ? remarkEl.value : '';
+  const inspector = inspEl ? inspEl.value : '';
+  const location = locationEl ? locationEl.value : appState.currentLocation;
+  const asset = appState.scannedAsset;
+
+  const record = {
+    id: Date.now(),
+    timestamp: new Date().toISOString(),
+    assetNumber: asset.assetNumber,
+    name: asset.name || '',
+    group: asset.group || '',
+    location,
+    quantity: qty,
+    remark,
+    inspector,
+    user: appState.currentUser.username,
+    photoUrl: '',
+    notFound: !!asset.notFound
+  };
+
+  showLoading('กำลังบันทึก...');
+
+  // Upload photo if any
+  if (appState.photoDataUrl && GAS_URL) {
+    try {
+      const uploadRes = await gasPost('uploadPhoto', {
+        photoBase64: appState.photoDataUrl,
+        fileName: `${asset.assetNumber}_${Date.now()}.jpg`
+      });
+      if (uploadRes && uploadRes.url) record.photoUrl = uploadRes.url;
+    } catch(e) { console.warn('Photo upload failed:', e); }
+  } else if (appState.photoDataUrl) {
+    // Store as base64 in local demo mode (small)
+    record.photoUrl = appState.photoDataUrl;
+  }
+
+  // Save to GAS or local
+  if (GAS_URL) {
+    const res = await gasPost('saveRecord', { record: JSON.stringify(record) });
+    if (!res || res.status !== 'ok') {
+      showToast('⚠️ บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง', 'error');
+      hideLoading();
+      return;
+    }
+  }
+
+  // Always save local too (offline fallback)
+  records.push(record);
+  saveLocalData('records', records);
+  txLog.push({ ...record, action: 'save' });
+  saveLocalData('txLog', txLog);
+
+  hideLoading();
+  showToast('✅ บันทึกเรียบร้อย!', 'success');
+  appState.photoDataUrl = null;
+  appState.photoFile = null;
+  goToScan();
+}
+
+// ====== NAVIGATION ======
+function goToScan() {
+  showScreen('scan');
+  document.getElementById('manual-asset').value = '';
+  setTimeout(startQR, 300);
+}
+
+function showHistory() {
+  stopQR();
+  renderHistory();
+  showScreen('history');
+}
+
+function goToSettings() {
+  showScreen('settings');
+}
+
+function showLog() {
+  showScreen('log');
+  loadLog();
+}
+
+// ====== HISTORY ======
+document.getElementById('btn-back-history').addEventListener('click', goToScan);
+document.getElementById('btn-export').addEventListener('click', exportCSV);
+
+async function renderHistory() {
+  showLoading('โหลดประวัติ...');
+  let data = records;
+
+  if (GAS_URL) {
+    const res = await gasCall('getRecords', { location: appState.currentLocation });
+    if (res && res.records) { data = res.records; records = data; saveLocalData('records', records); }
+  }
+
+  hideLoading();
+  const body = document.getElementById('history-body');
+  const locRecords = data.filter(r => r.location === appState.currentLocation);
+
+  if (!locRecords.length) {
+    body.innerHTML = `<div class="text-center text-muted" style="padding:60px 20px">
+      <div style="font-size:48px;margin-bottom:12px">📭</div>
+      <div>ยังไม่มีรายการในคลังนี้</div>
+    </div>`;
+    return;
+  }
+
+  body.innerHTML = locRecords.slice().reverse().map(r => `
+    <div class="tx-card">
+      ${r.photoUrl ? `<img src="${r.photoUrl}" class="tx-photo" onclick="openImageModal('${r.photoUrl}')" style="cursor:pointer">` : ''}
+      <div class="tx-top">
+        <div class="tx-asset">${r.assetNumber}</div>
+        <div class="tx-qty">${r.quantity}</div>
+      </div>
+      <div class="tx-name">${r.name || '(ไม่ระบุชื่อ)'}</div>
+      <div class="tx-meta">
+        📍 ${r.location} &nbsp;|&nbsp;
+        👤 ${r.inspector || '-'} &nbsp;|&nbsp;
+        💬 ${r.remark || '-'}<br>
+        🕐 ${formatDate(r.timestamp)}
+      </div>
+    </div>
+  `).join('');
+}
+
+function formatDate(iso) {
+  if (!iso) return '-';
+  const d = new Date(iso);
+  return d.toLocaleDateString('th-TH') + ' ' + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+}
+
+function exportCSV() {
+  const data = records.filter(r => r.location === appState.currentLocation);
+  if (!data.length) { showToast('ไม่มีข้อมูล', 'error'); return; }
+  const headers = ['Timestamp','AssetNumber','Name','Group','Location','Quantity','Remark','Inspector','User'];
+  const rows = data.map(r => headers.map(h => {
+    const map = { Timestamp:r.timestamp, AssetNumber:r.assetNumber, Name:r.name, Group:r.group, Location:r.location, Quantity:r.quantity, Remark:r.remark, Inspector:r.inspector, User:r.user };
+    return '"' + (map[h]||'') + '"';
+  }).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `stock_count_${appState.currentLocation}_${Date.now()}.csv`;
+  a.click();
+}
+
+// ====== TRANSACTION LOG ======
+async function loadLog() {
+  if (!appState.currentUser || appState.currentUser.role !== 'admin') return;
+  showLoading('โหลด Log...');
+
+  let data = txLog;
+  if (GAS_URL) {
+    const res = await gasCall('getLog');
+    if (res && res.log) { data = res.log; txLog = data; saveLocalData('txLog', txLog); }
+  }
+
+  hideLoading();
+  const tbody = document.getElementById('log-tbody');
+  tbody.innerHTML = data.slice().reverse().map(r => `
+    <tr>
+      <td>${formatDate(r.timestamp)}</td>
+      <td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${r.assetNumber}</td>
+      <td>${r.name||'-'}</td>
+      <td>${r.location||'-'}</td>
+      <td style="font-weight:700;font-family:'IBM Plex Mono',monospace">${r.quantity}</td>
+      <td>${r.inspector||'-'}</td>
+      <td>${r.remark||'-'}</td>
+      <td>${r.action||'save'}</td>
+    </tr>
+  `).join('');
+}
+
+// ====== SETTINGS ======
+function renderSettings() {
+  renderUsers();
+  renderConfigList('remarks', 'remarks-list');
+  renderConfigList('inspectors', 'inspectors-list');
+  const gasInp = document.getElementById('gas-url-input');
+  if (gasInp) gasInp.value = GAS_URL;
+}
+
+function renderUsers() {
+  users = loadLocalData('users', users);
+  const el = document.getElementById('users-list');
+  if (!el) return;
+  el.innerHTML = users.map((u, i) => `
+    <div class="user-row">
+      <div class="user-info">
+        <div class="avatar">${(u.fullname||u.username)[0].toUpperCase()}</div>
+        <div>
+          <div class="user-name">${u.fullname || u.username}</div>
+          <div class="user-role">@${u.username} · ${u.role === 'admin' ? '🔴 Admin' : '🟢 User'}</div>
+        </div>
+      </div>
+      ${u.username !== 'admin' ? `<button class="btn btn-danger btn-sm" onclick="deleteUser(${i})">ลบ</button>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderConfigList(type, elId) {
+  const data = type === 'remarks' ? remarks : inspectors;
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = data.map((item, i) => `
+    <div class="settings-row">
+      <span>${item}</span>
+      <button class="btn btn-danger btn-sm" onclick="deleteConfigItem('${type}', ${i})">ลบ</button>
+    </div>
+  `).join('') || '<div class="settings-row"><span class="text-muted" style="font-size:13px">ยังไม่มีรายการ</span></div>';
+}
+
+async function addConfigItem(type) {
+  const inputId = type === 'remarks' ? 'new-remark-input' : 'new-inspector-input';
+  const val = document.getElementById(inputId).value.trim();
+  if (!val) return;
+
+  if (type === 'remarks') {
+    if (!remarks.includes(val)) { remarks.push(val); saveLocalData('remarks', remarks); }
+  } else {
+    if (!inspectors.includes(val)) { inspectors.push(val); saveLocalData('inspectors', inspectors); }
+  }
+
+  if (GAS_URL) await gasPost('addConfig', { type, value: val });
+  document.getElementById(inputId).value = '';
+  renderConfigList(type, type + '-list');
+  showToast('✅ เพิ่มแล้ว', 'success');
+}
+
+async function deleteConfigItem(type, idx) {
+  if (type === 'remarks') {
+    const val = remarks[idx];
+    remarks.splice(idx, 1);
+    saveLocalData('remarks', remarks);
+    if (GAS_URL) await gasPost('deleteConfig', { type, value: val });
+    renderConfigList('remarks', 'remarks-list');
+  } else {
+    const val = inspectors[idx];
+    inspectors.splice(idx, 1);
+    saveLocalData('inspectors', inspectors);
+    if (GAS_URL) await gasPost('deleteConfig', { type, value: val });
+    renderConfigList('inspectors', 'inspectors-list');
+  }
+}
+
+function saveGASUrl() {
+  const val = document.getElementById('gas-url-input').value.trim();
+  GAS_URL = val;
+  localStorage.setItem('gas_url', val);
+  showToast('✅ บันทึก URL แล้ว', 'success');
+}
+
+// ====== USER MANAGEMENT ======
+function openAddUserModal() {
+  document.getElementById('new-username').value = '';
+  document.getElementById('new-password').value = '';
+  document.getElementById('new-fullname').value = '';
+  document.getElementById('new-role').value = 'user';
+  openModal('modal-add-user');
+}
+
+async function addUser() {
+  const u = document.getElementById('new-username').value.trim();
+  const p = document.getElementById('new-password').value.trim();
+  const f = document.getElementById('new-fullname').value.trim();
+  const r = document.getElementById('new-role').value;
+
+  if (!u || !p) { showToast('กรอกข้อมูลให้ครบ', 'error'); return; }
+  if (users.find(x => x.username === u)) { showToast('username นี้มีอยู่แล้ว', 'error'); return; }
+
+  const newUser = { username: u, password: p, fullname: f, role: r };
+  users.push(newUser);
+  saveLocalData('users', users);
+
+  if (GAS_URL) await gasPost('addUser', { user: JSON.stringify(newUser) });
+
+  closeModal('modal-add-user');
+  renderUsers();
+  showToast('✅ เพิ่มผู้ใช้แล้ว', 'success');
+}
+
+async function deleteUser(idx) {
+  if (!confirm(`ลบผู้ใช้ "${users[idx].username}"?`)) return;
+  const val = users[idx].username;
+  users.splice(idx, 1);
+  saveLocalData('users', users);
+  if (GAS_URL) await gasPost('deleteUser', { username: val });
+  renderUsers();
+  showToast('ลบผู้ใช้แล้ว', 'success');
+}
+
+// ====== ADD SKU MODAL ======
+function openAddSkuModal(assetNumber) {
+  document.getElementById('new-sku-id').value = assetNumber;
+  document.getElementById('new-sku-group').value = '';
+  document.getElementById('new-sku-name').value = '';
+  document.getElementById('new-sku-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('new-sku-location').value = appState.currentLocation;
+  openModal('modal-add-sku');
+}
+
+async function saveNewSku() {
+  const assetNumber = document.getElementById('new-sku-id').value;
+  const group = document.getElementById('new-sku-group').value.trim();
+  const name = document.getElementById('new-sku-name').value.trim();
+  const location = document.getElementById('new-sku-location').value;
+  const acquisitionDate = document.getElementById('new-sku-date').value;
+
+  if (!name) { showToast('กรอกชื่อสินทรัพย์', 'error'); return; }
+
+  const newAsset = { assetNumber, group, name, location, acquisitionDate };
+  assetInfo.push(newAsset);
+  saveLocalData('assetInfo', assetInfo);
+
+  if (GAS_URL) await gasPost('addAsset', { asset: JSON.stringify(newAsset) });
+
+  closeModal('modal-add-sku');
+  appState.scannedAsset = newAsset;
+  buildForm(newAsset);
+  showToast('✅ เพิ่มสินทรัพย์แล้ว', 'success');
+}
+
+// ====== MODAL ======
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function openImageModal(src) {
+  document.getElementById('modal-image-src').src = src;
+  openModal('modal-image');
+}
+
+// ====== SETTINGS NAV ======
+// Floating settings button (admin only)
+document.addEventListener('DOMContentLoaded', () => {
+  // settings button on scan screen - inject
+});
+
+// Click outside modal
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay && overlay.id !== 'modal-image') closeModal(overlay.id);
+  });
+});
+
+// ====== ADMIN FAB ======
+function injectAdminButton() {
+  if (appState.currentUser && appState.currentUser.role === 'admin') {
+    // Show settings accessible from scan screen
+    const fab = document.createElement('button');
+    fab.id = 'admin-fab';
+    fab.innerHTML = '⚙️';
+    fab.style.cssText = `
+      position:fixed;top:70px;right:16px;z-index:40;
+      width:40px;height:40px;border-radius:50%;
+      background:rgba(21,26,34,0.9);border:1px solid var(--border);
+      font-size:18px;cursor:pointer;color:var(--text2);
+      display:none;
+    `;
+    fab.onclick = () => {
+      renderSettings();
+      showScreen('settings');
+    };
+    document.body.appendChild(fab);
+  }
+}
+
+// Show admin FAB when on scan screen
+const observer = new MutationObserver(() => {
+  const fab = document.getElementById('admin-fab');
+  if (!fab) return;
+  const scanActive = document.getElementById('screen-scan').classList.contains('active');
+  fab.style.display = scanActive ? 'flex' : 'none';
+  fab.style.alignItems = 'center';
+  fab.style.justifyContent = 'center';
+});
+observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
+
+// Override showScreen to init admin FAB
+const _showScreen = showScreen;
+window.showScreen = function(id) {
+  _showScreen(id);
+  if (!document.getElementById('admin-fab') && appState.currentUser && appState.currentUser.role === 'admin') {
+    injectAdminButton();
+  }
+  const fab = document.getElementById('admin-fab');
+  if (fab) {
+    const isAdmin = appState.currentUser && appState.currentUser.role === 'admin';
+    fab.style.display = (id === 'scan' && isAdmin) ? 'flex' : 'none';
+    fab.style.alignItems = 'center';
+    fab.style.justifyContent = 'center';
+  }
+};
+</script>
+</body>
+</html>
