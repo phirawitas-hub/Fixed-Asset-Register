@@ -344,14 +344,14 @@ let ld = {
   records:    loadL('km23_records',    []),
   remarks:    loadL('km23_remarks',    ['ชำรุด','สมบูรณ์','รอซ่อม','สูญหาย']),
   inspectors: loadL('km23_inspectors', ['สมชาย ใจดี','สมหญิง รักงาน']),
-  locations:  loadL('km23_locations',  ['KM23-คลังB','KM23-คลังA_2026','KM23Office']),
+  locations:  loadL('km23_locations',  ['KM23-คลังB','KM23-คลังA','KM23Office']),
 };
 
 function ensureArrays() {
   if (!Array.isArray(ld.records))    ld.records    = [];
   if (!Array.isArray(ld.remarks))    ld.remarks    = ['ชำรุด','สมบูรณ์','รอซ่อม','สูญหาย'];
   if (!Array.isArray(ld.inspectors)) ld.inspectors = ['สมชาย ใจดี','สมหญิง รักงาน'];
-  if (!Array.isArray(ld.locations))  ld.locations  = ['KM23-คลังB','KM23-คลังA_2026','KM23Office'];
+  if (!Array.isArray(ld.locations))  ld.locations  = ['KM23-คลังB','KM23-คลังA','KM23Office'];
   if (!Array.isArray(ld.users))      ld.users      = [{username:'admin',password:'admin1234',fullname:'ผู้ดูแลระบบ',role:'admin'}];
   if (typeof ld.assetCache !== 'object' || Array.isArray(ld.assetCache)) ld.assetCache = {};
 }
@@ -418,7 +418,7 @@ function logout(){stopQR();state.user=null;state.location=null;showScreen('login
 // ════════════════════════════════════════════════
 // LOCATION
 // ════════════════════════════════════════════════
-const LOC_ICONS={'KM23-คลังB':'🏭','KM23-คลังA_2026':'🏗️','KM23Office':'🏢'};
+const LOC_ICONS={'KM23-คลังB':'🏭','KM23-คลังA':'🏗️','KM23Office':'🏢'};
 
 function renderLocCards(){
   ensureArrays();
