@@ -50,7 +50,6 @@
   #screen-location{padding:24px 16px}
   .location-header{text-align:center;padding:40px 0 32px}
   .location-header h2{font-size:26px;font-weight:700}
-  .location-header p{color:var(--text2);margin-top:8px}
   .loc-cards{display:flex;flex-direction:column;gap:12px}
   .loc-card{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:16px}
   .loc-card:hover,.loc-card.selected{border-color:var(--accent);background:rgba(240,165,0,.05)}
@@ -176,12 +175,6 @@
     <div style="margin-top:20px">
       <button class="btn btn-primary" id="btn-login">🔐 เข้าสู่ระบบ</button>
     </div>
-    <!-- GAS URL ตั้งได้จากหน้า login เลย -->
-    <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border)">
-      <label class="field-label">GAS URL (ตั้งครั้งแรก)</label>
-      <input type="url" id="login-gas-url" placeholder="https://script.google.com/macros/s/.../exec" style="font-size:12px">
-      <button class="btn btn-ghost" style="margin-top:8px;font-size:13px" onclick="saveGASUrlFromLogin()">บันทึก URL</button>
-    </div>
   </div>
 </div>
 
@@ -197,9 +190,7 @@
       <h2>เลือกคลังสินค้า</h2>
       <p class="text-muted">เลือกคลังที่ต้องการตรวจนับ</p>
     </div>
-    <div class="loc-cards" id="loc-cards">
-      <!-- จะ render จาก JS -->
-    </div>
+    <div class="loc-cards" id="loc-cards"></div>
   </div>
 </div>
 
@@ -378,21 +369,44 @@ let state = {
   photoDataUrl: null,
 };
 
-// Persistent local data
+// ── Safe localStorage loader ──────────────────────────────────
+function loadL(k, def) {
+  try {
+    const raw = localStorage.getItem(k);
+    if (raw === null || raw === undefined) return def;
+    const parsed = JSON.parse(raw);
+    // ถ้า def เป็น array ต้องได้ array กลับมา
+    if (Array.isArray(def) && !Array.isArray(parsed)) return def;
+    return parsed;
+  } catch(e) { return def; }
+}
+function saveL(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+// ── Persistent local data ─────────────────────────────────────
 let ld = {
   users:      loadL('km23_users',      [{username:'admin',password:'admin1234',fullname:'ผู้ดูแลระบบ',role:'admin'},{username:'user1',password:'1234',fullname:'ผู้ตรวจนับ 1',role:'user'}]),
-  assetCache: loadL('km23_assetCache', {}), // { [location]: [assets] }
+  assetCache: loadL('km23_assetCache', {}),
   records:    loadL('km23_records',    []),
   remarks:    loadL('km23_remarks',    ['ชำรุด','สมบูรณ์','รอซ่อม','สูญหาย']),
   inspectors: loadL('km23_inspectors', ['สมชาย ใจดี','สมหญิง รักงาน']),
   locations:  loadL('km23_locations',  ['KM23-คลังB','KM23-คลังA_2026','KM23Office']),
 };
-function loadL(k, def) { try { return JSON.parse(localStorage.getItem(k)) || def; } catch(e) { return def; } }
-function saveL(k, v)   { localStorage.setItem(k, JSON.stringify(v)); }
-function saveLD()      { Object.entries(ld).forEach(([k,v]) => saveL('km23_'+k, v)); }
+
+// ── Guard: ensure arrays are always arrays ────────────────────
+function ensureArrays() {
+  if (!Array.isArray(ld.records))    ld.records    = [];
+  if (!Array.isArray(ld.remarks))    ld.remarks    = ['ชำรุด','สมบูรณ์','รอซ่อม','สูญหาย'];
+  if (!Array.isArray(ld.inspectors)) ld.inspectors = ['สมชาย ใจดี','สมหญิง รักงาน'];
+  if (!Array.isArray(ld.locations))  ld.locations  = ['KM23-คลังB','KM23-คลังA_2026','KM23Office'];
+  if (!Array.isArray(ld.users))      ld.users      = [{username:'admin',password:'admin1234',fullname:'ผู้ดูแลระบบ',role:'admin'}];
+  if (typeof ld.assetCache !== 'object' || Array.isArray(ld.assetCache)) ld.assetCache = {};
+}
+ensureArrays();
+
+function saveLD() { Object.entries(ld).forEach(([k,v]) => saveL('km23_'+k, v)); }
 
 // ════════════════════════════════════════════════
-// GAS API — GET ONLY (v3 ใช้ GET ทั้งหมด)
+// GAS API — GET ONLY
 // ════════════════════════════════════════════════
 async function gasGET(params) {
   if (!GAS_URL) return null;
@@ -435,17 +449,9 @@ function toast(msg, type='', ms=2800) {
 // LOGIN
 // ════════════════════════════════════════════════
 window.onload = () => {
-  document.getElementById('login-gas-url').value = GAS_URL;
   document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
   document.getElementById('btn-login').addEventListener('click', doLogin);
 };
-
-function saveGASUrlFromLogin() {
-  const v = document.getElementById('login-gas-url').value.trim();
-  if (!v) return;
-  GAS_URL = v; localStorage.setItem('km23_gas_url', v);
-  toast('✅ บันทึก URL แล้ว', 'success');
-}
 
 async function doLogin() {
   const u = document.getElementById('login-user').value.trim();
@@ -455,15 +461,13 @@ async function doLogin() {
   if (!u||!p) { errEl.textContent='กรุณากรอกชื่อผู้ใช้และรหัสผ่าน'; return; }
   showLoading('กำลังตรวจสอบ...');
 
-  // ลอง GAS ก่อน ถ้าไม่มี URL หรือ GAS fail → ใช้ local
   let userData = null;
   if (GAS_URL) {
     const res = await gasGET({ action:'login', username:u, password:p });
-    // GAS v3 ส่ง ok:true (ไม่ใช่ status:'ok')
     if (res && res.ok && res.user) userData = res.user;
   }
   if (!userData) {
-    // fallback local
+    ensureArrays();
     userData = ld.users.find(x => x.username===u && x.password===p) || null;
   }
 
@@ -484,6 +488,7 @@ function logout() { stopQR(); state.user=null; state.location=null; showScreen('
 const LOC_ICONS = { 'KM23-คลังB':'🏭', 'KM23-คลังA_2026':'🏗️', 'KM23Office':'🏢' };
 
 function renderLocCards() {
+  ensureArrays();
   const el = document.getElementById('loc-cards');
   el.innerHTML = ld.locations.map(loc => `
     <div class="loc-card" onclick="selectLocation('${loc}')">
@@ -501,7 +506,6 @@ async function selectLocation(loc) {
   document.getElementById('scan-location-label').textContent = loc;
   document.getElementById('form-location-label').textContent = loc;
 
-  // show admin fab
   if (state.user && state.user.role==='admin') {
     document.getElementById('btn-settings-fab').style.display='flex';
   }
@@ -510,14 +514,12 @@ async function selectLocation(loc) {
 
   if (GAS_URL) {
     const res = await gasGET({ action:'getAssets', location: loc });
-    // GAS v3 ส่ง { ok:true, assets:[...], total:N }
     if (res && res.ok && Array.isArray(res.assets) && res.assets.length > 0) {
       ld.assetCache[loc] = res.assets;
       saveL('km23_assetCache', ld.assetCache);
       dbg('✅ โหลด assets ' + res.assets.length + ' รายการ colIndex=' + JSON.stringify(res.colIndex), 'ok');
       toast('✅ โหลด ' + res.assets.length + ' รายการ', 'success');
     } else {
-      // GAS ตอบ 0 หรือ error → แสดงว่าทำไม
       const reason = res ? ('ok='+res.ok+' total='+res.total+' err='+(res.error||'-')) : 'no response';
       dbg('⚠️ getAssets: ' + reason, 'warn');
       const cached = (ld.assetCache[loc] || []);
@@ -576,11 +578,9 @@ function handleScan(raw) {
 
   dbg('🔍 scan: "' + code + '" loc="' + state.location + '" pool=' + assets.length);
 
-  // เปรียบเทียบ trim + uppercase ทั้ง 2 ฝั่ง
   let asset = assets.find(a => (a.assetNumber||'').trim().toUpperCase() === code);
 
   if (!asset) {
-    // ลองหาว่ามีใน location อื่นไหม
     let allAssets = [];
     Object.values(ld.assetCache).forEach(arr => allAssets = allAssets.concat(arr));
     const wrongLoc = allAssets.find(a => (a.assetNumber||'').trim().toUpperCase() === code);
@@ -591,7 +591,6 @@ function handleScan(raw) {
       dbg('❌ ไม่พบเลย — ตัวอย่าง pool: ' + assets.slice(0,3).map(a=>'"'+a.assetNumber+'"').join(', '), 'err');
       toast('❌ ไม่พบ "' + code + '" ใน ' + assets.length + ' assets', 'error', 4000);
     }
-    // ยังให้บันทึกได้ (not found)
     asset = { assetNumber: raw.trim(), notFound: true };
   }
 
@@ -606,6 +605,7 @@ function handleScan(raw) {
 // FORM
 // ════════════════════════════════════════════════
 function buildForm(asset) {
+  ensureArrays();
   const rmOpts  = ld.remarks.map(r=>`<option>${r}</option>`).join('');
   const insOpts = ld.inspectors.map(i=>`<option>${i}</option>`).join('');
 
@@ -670,7 +670,7 @@ function onPhoto(e) {
 }
 
 // ════════════════════════════════════════════════
-// SAVE RECORD — ใช้ GET (GAS v3)
+// SAVE RECORD — แก้ bug ld.records.push
 // ════════════════════════════════════════════════
 async function saveRecord() {
   const asset = state.scannedAsset;
@@ -694,7 +694,6 @@ async function saveRecord() {
   let gasSaved = false;
   if (GAS_URL) {
     const res = await gasGET({ action:'saveRecord', ...record });
-    // GAS v3 ส่ง { ok:true, row:N }
     if (res && res.ok) {
       gasSaved = true;
       dbg('✅ บันทึกลง Sheet row=' + res.row, 'ok');
@@ -703,7 +702,11 @@ async function saveRecord() {
     }
   }
 
-  // บันทึก local เสมอ
+  // ── Guard: ป้องกัน push ไม่ใช่ function ──────────────────────
+  if (!Array.isArray(ld.records)) {
+    ld.records = [];
+  }
+
   const localRec = { ...record, qty, ts: new Date().toISOString(), photoDataUrl: state.photoDataUrl };
   ld.records.push(localRec);
   saveL('km23_records', ld.records);
@@ -725,6 +728,7 @@ function showSettings() { stopQR(); renderSettings(); showScreen('settings'); }
 // HISTORY (local)
 // ════════════════════════════════════════════════
 function renderHistory() {
+  ensureArrays();
   const body=document.getElementById('history-body');
   const data=ld.records.filter(r=>r.location===state.location||r.status==='not_found');
   if(!data.length){
@@ -747,6 +751,7 @@ function fmtDate(iso) {
 }
 
 function exportCSV() {
+  ensureArrays();
   const data=ld.records.filter(r=>r.location===state.location);
   if(!data.length){toast('ไม่มีข้อมูล','error');return;}
   const h=['Timestamp','AssetNumber','Name','Location','Status','Note','CountedBy','Qty'];
@@ -782,14 +787,12 @@ async function testGAS() {
   el.textContent='กำลังทดสอบ...';
   showLoading('ทดสอบ GAS...');
 
-  // ping
   const ping = await gasGET({ action:'ping' });
   if (!ping || !ping.ok) {
     hideLoading(); el.textContent='❌ ping ไม่สำเร็จ — ตรวจ URL และ Deploy'; return;
   }
   dbg('✅ ping OK: '+ping.time,'ok');
 
-  // getAssets
   const loc = state.location || ld.locations[0] || 'KM23-คลังB';
   const res  = await gasGET({ action:'getAssets', location: loc });
   hideLoading();
@@ -812,6 +815,7 @@ async function testGAS() {
 }
 
 function renderConfigList(type,elId) {
+  ensureArrays();
   const data=type==='remarks'?ld.remarks:ld.inspectors;
   const el=document.getElementById(elId);
   if(!el) return;
@@ -824,6 +828,7 @@ function renderConfigList(type,elId) {
 }
 
 function addConfigItem(type) {
+  ensureArrays();
   const id=type==='remarks'?'new-remark-input':'new-inspector-input';
   const v=document.getElementById(id).value.trim(); if(!v) return;
   if(type==='remarks'){if(!ld.remarks.includes(v)){ld.remarks.push(v);saveL('km23_remarks',ld.remarks);renderConfigList('remarks','remarks-list');}}
@@ -832,11 +837,13 @@ function addConfigItem(type) {
 }
 
 function deleteConfig(type,i) {
+  ensureArrays();
   if(type==='remarks'){ld.remarks.splice(i,1);saveL('km23_remarks',ld.remarks);renderConfigList('remarks','remarks-list');}
   else{ld.inspectors.splice(i,1);saveL('km23_inspectors',ld.inspectors);renderConfigList('inspectors','inspectors-list');}
 }
 
 function renderLocSettings() {
+  ensureArrays();
   const el=document.getElementById('loc-list-settings');
   if(!el) return;
   el.innerHTML=ld.locations.map((loc,i)=>`
@@ -847,14 +854,16 @@ function renderLocSettings() {
   `).join('');
 }
 function addLocation() {
+  ensureArrays();
   const v=document.getElementById('new-loc-input').value.trim(); if(!v) return;
   if(!ld.locations.includes(v)){ld.locations.push(v);saveL('km23_locations',ld.locations);}
   document.getElementById('new-loc-input').value=''; renderLocSettings();
   toast('✅ เพิ่ม location แล้ว','success');
 }
-function deleteLoc(i){ld.locations.splice(i,1);saveL('km23_locations',ld.locations);renderLocSettings();}
+function deleteLoc(i){ensureArrays();ld.locations.splice(i,1);saveL('km23_locations',ld.locations);renderLocSettings();}
 
 function renderUsers() {
+  ensureArrays();
   const el=document.getElementById('users-list'); if(!el) return;
   el.innerHTML=ld.users.map((u,i)=>`
     <div class="user-row">
@@ -867,6 +876,7 @@ function renderUsers() {
   `).join('');
 }
 function addUser() {
+  ensureArrays();
   const u=document.getElementById('new-username').value.trim();
   const p=document.getElementById('new-password').value.trim();
   const f=document.getElementById('new-fullname').value.trim();
@@ -878,6 +888,7 @@ function addUser() {
   toast('✅ เพิ่มผู้ใช้แล้ว','success');
 }
 function deleteUser(i){
+  ensureArrays();
   if(!confirm('ลบผู้ใช้ "'+ld.users[i].username+'"?')) return;
   ld.users.splice(i,1); saveL('km23_users',ld.users); renderUsers();
   toast('ลบแล้ว','success');
